@@ -1237,7 +1237,7 @@ h3 {
 
 /* line 4, C:/Users/SPN Graphics/Desktop/CL September/210 Medical/HTML/scss/_slider.scss */
 .slider_bg_2 {
-  background-image: url(../img/banner/banner2.png);
+  background-image: url(../img/banner/doctora.jpg);
 }
 
 /* line 8, C:/Users/SPN Graphics/Desktop/CL September/210 Medical/HTML/scss/_slider.scss */
@@ -4502,7 +4502,7 @@ h6 {
 
 /* line 1042, C:/Users/SPN Graphics/Desktop/CL September/210 Medical/HTML/scss/_elements.scss */
 .form-select {
-  height: 40px;
+  height: 50px;
   width: 100%;
 }
 
@@ -4512,9 +4512,53 @@ h6 {
   border-radius: 0px;
   height: 40px;
   background: #f9f9ff;
-  padding-left: 45px;
+  padding-left: 20px;
   padding-right: 40px;
-  width: 100%;
+}
+
+.form-select, input[type="text"], input[type="date"], input[type="email"], input[type="file"], button {
+  margin-bottom: 10px; /* Adjust this value to control the space */
+}
+
+.row > div {
+  margin-bottom: 10px; /* Adjust this value to reduce the space between rows */
+}
+
+.popup_box .popup_inner h3 {
+  margin-bottom: 20px; /* Adjust this value to control the space below the title */
+}
+
+/* Ensure the select elements have the same style as the input fields */
+select.form-select.wide {
+  border: 1px solid #ddd; /* Adjust this to match the border color of the input fields */
+  border-radius: 4px; /* Ensure the border-radius matches */
+  font-weight: normal;
+  font-family: inherit;
+  padding: 10px 15px;
+  line-height: normal;
+  font-size: 15px;
+  height: 48px; /* Ensure the height is consistent with other elements */
+  box-sizing: border-box; /* Ensure padding doesn't affect the size */
+  color: #9ea0a5; /* This color matches the placeholder text color */
+}
+input[type="date"] {
+  font-weight: normal; /* Make the text unbold */
+  text-align: left; /* Align the placeholder text to the left */
+  padding-left: 10px; /* Add some padding for better alignment */
+  font-family: inherit; /* Ensure consistent font family */
+  color: #9ea0a5; /* Match the placeholder text color */
+  border: 1px solid #ddd; /* Keep the border consistent with other input fields */
+  border-radius: 4px; /* Keep the border-radius consistent */
+  height: 48px; /* Ensure consistent height with other input fields */
+  box-sizing: border-box; /* Ensure padding doesn't affect the size */
+}
+
+select.form-select.wide option {
+  font-weight: normal;
+  font-family: inherit;
+  font-size: 15px;
+
+  color: #000; /* Normal text color for options */
 }
 
 /* line 1053, C:/Users/SPN Graphics/Desktop/CL September/210 Medical/HTML/scss/_elements.scss */
@@ -4537,7 +4581,7 @@ h6 {
   line-height: 28px;
   min-height: 28px;
   font-size: 12px;
-  padding-left: 45px;
+  padding-left: 20px;
 }
 
 /* line 1067, C:/Users/SPN Graphics/Desktop/CL September/210 Medical/HTML/scss/_elements.scss */

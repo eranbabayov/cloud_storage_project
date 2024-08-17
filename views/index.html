@@ -25,6 +25,8 @@
     <link rel="stylesheet" href="css/slicknav.css">
     <link rel="stylesheet" href="css/style.css">
     <!-- <link rel="stylesheet" href="css/responsive.css"> -->
+         <!-- Inline style to override bold font -->
+
 </head>
 
 <body>
@@ -124,8 +126,8 @@
                         <div class="icon">
                             <i class="flaticon-electrocardiogram"></i>
                         </div>
-                        <h3>edit patient medications list</h3>
-                        <p>Add, Delete or edit patiend medications list.</p>
+                        <h3>Edit client chronic Disease</h3>
+                        <p>Add or remove chronic Disease for client</p>
                         <a href="#" class="boxed-btn3-white">Edit list </a>
                     </div>
                 </div>
@@ -144,8 +146,8 @@
                         <div class="icon">
                             <i class="flaticon-first-aid-kit"></i>
                         </div>
-                        <h3>Edit client chronic Disease</h3>
-                        <p>Add or remove chronic Disease for client.</p>
+                        <h3>Edit patient medications list</h3>
+                        <p>Add, Delete or edit patiend medications list</p>
                         <a href="#" class="boxed-btn3-white">Make an Appointment</a>
                     </div>
                 </div>
@@ -167,26 +169,37 @@
                             <input type="text"  placeholder="Name">
                         </div>
                         <div class="col-xl-6">
-                            <input type="text"  placeholder="Age">
+                            <input type="text" placeholder="Phone no." pattern="\d{10}" maxlength="10" title="Please enter a valid phone number" required>
                         </div>
+
                         <div class="col-xl-6">
-                            <select class="form-select wide" id="default-select">
+                            <select class="form-select wide" id="gender-select" onchange="GenderChange(this)">
                                 <option value="" disabled selected>Gender</option>
                                 <option value="1">Male</option>
                                 <option value="2">Female</option>
                                 <option value="3">Other</option>
                             </select>
                         </div>
+
                         <div class="col-xl-6">
-                            <select class="form-select wide" id="pregnancy-select">
-                                <option value="" disabled selected>pregnancy</option>
+                            <input type="date" id="birthdate" placeholder="Birthdate" onchange="calculateAge()">
+                        </div>
+
+                        
+                        <div class="col-xl-6">
+                            <select class="form-select wide" id="pregnancy-select" >
+                                <option value="" disabled selected>Pregnancy</option>
                                 <option value="1">Pregnant</option>
                                 <option value="2">Not pregnant</option>
                             </select>
                         </div>
 
                         <div class="col-xl-6">
-                            <input type="text"  placeholder="Phone no.">
+                            <select class="form-select wide" id="Breastfeeding-select" >
+                                <option value="" disabled selected>Breastfeeding</option>
+                                <option value="1">Yes</option>
+                                <option value="2">No</option>
+                            </select>
                         </div>
                         <div class="col-xl-12">
                             <input type="email"  placeholder="Email">
@@ -252,26 +265,58 @@
     </script>
 <!-- Gender and Pregnancy Logic -->
 <script>
-    document.getElementById('default-select').addEventListener('change', function() {
-        const gender = this.value;
+    function GenderChange(selectElement) {
+        const gender = selectElement.value;
         const pregnancySelect = document.getElementById('pregnancy-select');
+        const BreastfeedingSelect = document.getElementById('Breastfeeding-select');
 
-        // Disable and reset the pregnancy dropdown if gender is Male
-        if (gender === '1') { 
-            pregnancySelect.disabled = true; // Disable pregnancy dropdown
+        // Show the pregnancy dropdown only if the gender is Female
+        if (gender === '1') { // '1' corresponds to Male 
+            pregnancySelect.disabled = true; // Disable the pregnancy dropdown
             pregnancySelect.value = ""; // Reset to the default option
+            BreastfeedingSelect.disabled = true;
+            BreastfeedingSelect.value = ""; // Reset to the default option
         } else {
-            pregnancySelect.disabled = false; // Enable pregnancy dropdown
+            pregnancySelect.style.display = 'block'; // Show the pregnancy dropdown
+            pregnancySelect.disabled = false; // Enable the pregnancy dropdown
+            BreastfeedingSelect.style.display = 'block'; // Show the pregnancy dropdown
+            BreastfeedingSelect.disabled = false; // Enable the pregnancy dropdown
         }
-    });
-
-    // Reset the gender and pregnancy dropdowns on page load
-    window.addEventListener('load', function() {
-        document.getElementById('default-select').value = "";
-        document.getElementById('pregnancy-select').value = "";
-        document.getElementById('pregnancy-select').disabled = false; // Ensure it's enabled at start
-    });
+    }
 </script>
+<script>
+function calculateAge() {
+    const birthdateInput = document.getElementById('birthdate');
+    const birthdate = new Date(birthdateInput.value);
+    const today = new Date();
+
+    let ageYears = today.getFullYear() - birthdate.getFullYear();
+    let ageMonths = today.getMonth() - birthdate.getMonth();
+
+    // Adjust calculation if the birthday hasn't occurred yet this year
+    if (ageMonths < 0) {
+        ageYears--;
+        ageMonths += 12;
+    }
+
+    // Combine years and months into a decimal format, e.g., 10.3 for 10 years and 3 months
+    const ageInYearsAndMonths = ageYears + (ageMonths / 12);
+
+    // Output or store the calculated age
+    console.log('Age in years and months:', ageInYearsAndMonths.toFixed(1)); // e.g., 10.3
+
+    // Store the age value in a hidden input for form submission
+    document.getElementById('ageValue').value = ageInYearsAndMonths.toFixed(1);
+}
+
+// Set the max attribute for the date input to prevent selecting future dates
+document.addEventListener('DOMContentLoaded', function() {
+    const birthdateInput = document.getElementById('birthdate');
+    const today = new Date().toISOString().split('T')[0];
+    birthdateInput.setAttribute('max', today);
+});
+</script>
+
 </body>
 
 </html>
