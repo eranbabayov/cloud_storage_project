@@ -1,5 +1,3 @@
-// controllers/patientController.js
-
 const patientModel = require('../models/patientModel');
 
 async function listPatients(req, res) {

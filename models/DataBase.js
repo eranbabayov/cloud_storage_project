@@ -13,6 +13,7 @@ const config = {
         packetSize: 4096
     }
 };
+let pool;
 
 async function get_connection() {
     try {
