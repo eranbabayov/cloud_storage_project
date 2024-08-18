@@ -6,7 +6,7 @@ async function getMedication() {
     try {
         console.log("Try to get patients from db")
         const connection = await db.get_connection(); // Using the connect function from data_base.js
-        const result = await connection.request().query('SELECT * FROM Medication');
+        const result = await connection.request().query('SELECT * FROM Medications');
         return result.recordset;
     } catch (err) {
         console.error('Error querying the database:', err);

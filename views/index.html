@@ -159,35 +159,35 @@
     <!-- link that opens popup -->
 
     <!-- form itself end-->
-    <form id="test-form" class="white-popup-block mfp-hide">
+    <form id="test-form" class="white-popup-block mfp-hide" action="/patient/add" method="POST" enctype="multipart/form-data">
         <div class="popup_box ">
             <div class="popup_inner">
                 <h3>Add client</h3>
                 <form action="#">
                     <div class="row">
                         <div class="col-xl-6">
-                            <input type="text"  placeholder="Name">
+                            <input type="text"  placeholder="Name" id="name" name="name">
                         </div>
                         <div class="col-xl-6">
-                            <input type="text" placeholder="Phone no." pattern="\d{10}" maxlength="10" title="Please enter a valid phone number" required>
+                            <input type="text" placeholder="Phone no." name="phone" id="phone" pattern="\d{10}" maxlength="10" title="Please enter a valid phone number" required>
                         </div>
 
                         <div class="col-xl-6">
-                            <select class="form-select wide" id="gender-select" onchange="GenderChange(this)">
+                            <select class="form-select wide" name="gender" id="gender-select" onchange="GenderChange(this)">
                                 <option value="" disabled selected>Gender</option>
-                                <option value="1">Male</option>
-                                <option value="2">Female</option>
-                                <option value="3">Other</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
                             </select>
                         </div>
 
                         <div class="col-xl-6">
-                            <input type="date" id="birthdate" placeholder="Birthdate" onchange="calculateAge()">
+                            <input type="date" id="birthdate" name="birthdate" placeholder="Birthdate" onchange="calculateAge()">
                         </div>
 
                         
                         <div class="col-xl-6">
-                            <select class="form-select wide" id="pregnancy-select" >
+                            <select class="form-select wide" id="pregnancy-select" name="pregnancy-select" >
                                 <option value="" disabled selected>Pregnancy</option>
                                 <option value="1">Pregnant</option>
                                 <option value="2">Not pregnant</option>
@@ -195,21 +195,21 @@
                         </div>
 
                         <div class="col-xl-6">
-                            <select class="form-select wide" id="Breastfeeding-select" >
-                                <option value="" disabled selected>Breastfeeding</option>
+                            <select class="form-select wide" id="nursing-select" name="nursing-select">
+                                <option value="" disabled selected>Nursing</option>
                                 <option value="1">Yes</option>
                                 <option value="2">No</option>
                             </select>
                         </div>
                         <div class="col-xl-12">
-                            <input type="email"  placeholder="Email">
+                            <input type="email"  placeholder="Email" id="email" name="email">
                         </div>
                         <div class="col-xl-12">
-                            <label for="client-image" class="form-label">Upload Client Image (PNG, JPEG)</label>
-                            <input type="file" id="client-image" accept=".png, .jpeg, .jpg">
+                            <label for="client-image" class="client_image">Upload Client Image (PNG, JPEG)</label>
+                            <input type="file" id="client-image" name="photo" accept=".png, .jpeg, .jpg" onchange="checkNewImage(event)">
                         </div>
                         <div class="col-xl-12">
-                            <button type="submit" class="boxed-btn3">Confirm</button>
+                            <button type="submit" class="boxed-btn3">Confirm</button >
                         </div>
                     </div>
                 </form>
@@ -243,8 +243,11 @@
     <script src="js/jquery.form.js"></script>
     <script src="js/jquery.validate.min.js"></script>
     <script src="js/mail-script.js"></script>
+    <script src="../models/checkImage.js"></script>  
+    <script src="../models/patientModel.js"></script>  
 
     <script src="js/main.js"></script>
+
     <script>
         $('#datepicker').datepicker({
             iconsLibrary: 'fontawesome',
@@ -262,25 +265,49 @@
     $(document).ready(function() {
     $('.js-example-basic-multiple').select2();
 });
+
     </script>
+
+    <script>
+        async function checkNewImage(event) {
+            // Get the file from the input element
+            const file = event.target.files[0];
+            // Check if a file is selected
+            if (file) {
+                try {
+                    // Wait for the checkImage function to complete
+                    const result = await checkImage(file);
+                    if (!result) {
+                        alert("You inserted a wrong face image! Please change the image.");
+                        
+                        // Clear the image input
+                        event.target.value = '';
+                    }
+                } catch (error) {
+                    console.error("Error checking image:", error);
+                }
+            }
+        }
+    </script>
+    
 <!-- Gender and Pregnancy Logic -->
 <script>
     function GenderChange(selectElement) {
         const gender = selectElement.value;
         const pregnancySelect = document.getElementById('pregnancy-select');
-        const BreastfeedingSelect = document.getElementById('Breastfeeding-select');
+        const NursingSelect = document.getElementById('nursing-select');
 
         // Show the pregnancy dropdown only if the gender is Female
-        if (gender === '1') { // '1' corresponds to Male 
+        if (gender === 'Male') {
             pregnancySelect.disabled = true; // Disable the pregnancy dropdown
             pregnancySelect.value = ""; // Reset to the default option
-            BreastfeedingSelect.disabled = true;
-            BreastfeedingSelect.value = ""; // Reset to the default option
+            NursingSelect.disabled = true;
+            NursingSelect.value = ""; // Reset to the default option
         } else {
             pregnancySelect.style.display = 'block'; // Show the pregnancy dropdown
             pregnancySelect.disabled = false; // Enable the pregnancy dropdown
-            BreastfeedingSelect.style.display = 'block'; // Show the pregnancy dropdown
-            BreastfeedingSelect.disabled = false; // Enable the pregnancy dropdown
+            NursingSelect.style.display = 'block'; // Show the pregnancy dropdown
+            NursingSelect.disabled = false; // Enable the pregnancy dropdown
         }
     }
 </script>

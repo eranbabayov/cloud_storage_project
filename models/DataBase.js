@@ -26,6 +26,7 @@ async function get_connection() {
         // Otherwise, create a new connection pool
         pool = await sql.connect(config);
         console.log('Connected to the database successfully!');
+
         return pool;
     } catch (err) {
         console.error('Database connection error:', err);

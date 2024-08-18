@@ -1,6 +1,6 @@
-// models/patientModel.js
 
 const db = require('./DataBase'); // Updated to use data_base.js
+const sql = require('mssql');
 
 async function getAllPatients() {
     try {
@@ -14,30 +14,31 @@ async function getAllPatients() {
     }
 }
 
+async function add_new_client(name, birthdate, gender, pregnancy, nursing, Phone, email, img) {
 
-async function add_new_client(name, age, gender, pregnancy, breast_feeding, phone_number, email, img) {
     try {
-        console.log("Trying to insert a new patient into the database");
-
-        const connection = await db.connect(); // Get the database connection from data_base.js
-
+        const connection = await db.get_connection(); // Get the database connection from data_base.js
         // Prepare the SQL query with parameterized values to prevent SQL injection
+        if (gender== 'male'){
+            nursing = false
+            breast_feeding = false
+        }
         const query = `
-            INSERT INTO Patients (Name, Sex, Pregnancy, Breastfeeding ,Age, Photo, Email, Phone, ChronicCondition)
-            VALUES (@Name, @Sex, @Pregnancy, @Breastfeeding, @Age, @Photo, @Email, @Phone, NULL)
+            INSERT INTO Patients (Id, Name, Gender, Pregnancy, Nursing ,Birthdate, Photo, Email, Phone, ChronicCondition)
+            VALUES (@Id, @Name, @gender, @Pregnancy, @nursing, @birthdate, @Photo, @Email, @Phone, NULL)
         `;
-
+        
         // Use the connection to create a request and pass the parameters
         const request = connection.request();
+        request.input('Id', sql.Int, 20);
         request.input('Name', sql.NVarChar, name);
-        request.input('Sex', sql.NVarChar, gender);
+        request.input('gender', sql.NVarChar, gender);
         request.input('Pregnancy', sql.Bit, pregnancy);
-        request.input('Breastfeeding', sql.Bit, breast_feeding);
-        request.input('Age', sql.Int, age);
+        request.input('nursing', sql.Bit, nursing);
+        request.input('birthdate', sql.Date, birthdate);
         request.input('Photo', sql.NVarChar, img);
         request.input('Email', sql.NVarChar, email);
-        request.input('Phone', sql.NVarChar, phone_number);
-
+        request.input('Phone', sql.NVarChar, Phone);
         // Execute the query
         const result = await request.query(query);
 
