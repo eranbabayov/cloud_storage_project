@@ -1,4 +1,5 @@
 const patientModel = require('../models/patientModel');
+const { editDiseases } = require('./diseaseController');
 
 async function listPatients(req, res) {
     try {
@@ -47,5 +48,5 @@ async function addPatient(req, res) {
 module.exports = {
     listPatients,
     addPatient,
-    editDiseasesPage
+    editDiseases
 };

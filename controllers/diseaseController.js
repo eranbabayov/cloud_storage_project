@@ -1,4 +1,5 @@
 const diseaseModel = require('../models/diseaseModel');
+const patientModel = require('../models/patientModel');
 
 async function getDisease(req, res) {
     try {
@@ -12,8 +13,9 @@ async function getDisease(req, res) {
 
 async function editDiseases(req, res){
     try {
-        const patients = await diseaseModel.editDiseases();
-        res.render('addOrRemoveDiseases', { patients: patients, diseases: [], currentDiseases: [] });
+        const diseases = await diseaseModel.getAllDiseases();
+        const patients = await patientModel.getAllPatients();
+        res.render('addOrRemoveDiseases', { patients: patients, diseases: diseases, currentDiseases: [] });
       } catch (err) {
         console.error('Error fetching patients:', err);
         res.status(500).send('Internal Server Error');

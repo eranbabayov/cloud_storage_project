@@ -2,10 +2,10 @@ const express = require('express');
 const fileUpload = require('express-fileupload');
 
 const app = express();
-//const patientRoutes = require('./routes/patientRoutes');
+const patientRoutes = require('./routes/patientRoutes');
 const ChronicDiseaseRoutes = require('./routes/chronicDiseaseRoutes');
 const medicationsRoutes = require('./routes/medicationsRoutes');
-
+const db = require('./models/DataBase')
 const path = require('path');
 
 app.use(express.static(__dirname));
@@ -17,7 +17,7 @@ app.use(express.json());
 
 app.set('view engine', 'ejs');
 
-//app.use('/patient', patientRoutes);
+app.use('/patient', patientRoutes);
 app.use("/patient_chronic_disease", ChronicDiseaseRoutes);
 app.use("/patient_medications", medicationsRoutes);
 
@@ -41,6 +41,8 @@ app.post('/upload', async (req, res) => {
     }
   
   })
+
+db.get_connection()
 
 const port = 3000;
 app.listen(port, () => {
