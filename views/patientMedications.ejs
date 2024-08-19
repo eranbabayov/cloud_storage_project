@@ -36,7 +36,7 @@
                     <!-- Patient Selection -->
                     <div class="form-group">
                         <label for="patient-select">Choose Patient</label>
-                        <select class="form-select wide" id="patient-select" name="patient_id" required required onchange="updateMedication()">
+                        <select class="form-select wide" id="patient-select" name="patient_id" required onchange="updateMedication()">
                             <option value="" disabled selected>Select a patient</option>
                             <% patients.forEach(function(patient) { %>
                                 <option value="<%= patient.Id %>"><%= patient.Name %></option>
@@ -47,7 +47,7 @@
                     <!-- Add Medication Section -->
                     <div class="form-group mt-4">
                         <label for="medication-select">Choose Medication to Add</label>
-                        <select class="form-select wide" id="medication-select" name="medication_id_add" >
+                        <select class="form-select wide" id="medication-select" name="medication_id_add" onchange="newMedicanAdding()" >
                             <% medications.forEach(function(medication) { %>
                                 <option value="<%= medication.Id %>"><%= medication.MedicationName %></option>
                             <% }) %>
@@ -81,8 +81,7 @@
 
     <!-- Inline JS for dynamic functionalities -->
     <script>
-            const currentMedications = <%- JSON.stringify(currentMedications) %>;
-            alert(currentMedications[0].patient_id)
+        const currentMedications = <%- JSON.stringify(currentMedications) %>;
         function updateMedication() {
             const patientId = document.getElementById('patient-select').value;
             if (!patientId) {
@@ -112,6 +111,31 @@
             });
         }
 
+        // function validateSettingNewMedication(new_medication, medicationsCode, )
+
+        function newMedicanAdding(){
+            const patientId = document.getElementById('patient-select').value;
+            if (!patientId) {
+                console.error('No patient selected!');
+                alert('No patient selected')
+                return;
+            }
+            const medicanSelect = document.getElementById('medication-select').value;
+
+            const filteredMedication = currentMedications.filter(medication => medication.patient_id === parseInt(patientId));
+            // filteredMedication.forEach(medication => {
+            //     // Split the medication string by comma
+            //     const medicationsArray = medication.Medication.split(',');
+            //     // Loop through each medication and add it as a separate option
+            //     medicationsArray.forEach(singleMedication => {
+            //         if (medication.Medication){
+
+            //         }
+            //     });
+            // });
+
+
+        }
     </script>
 </body>
 </html>
