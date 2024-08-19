@@ -2,7 +2,7 @@ const express = require('express');
 const fileUpload = require('express-fileupload');
 
 const app = express();
-const patientRoutes = require('./routes/patientRoutes');
+//const patientRoutes = require('./routes/patientRoutes');
 const ChronicDiseaseRoutes = require('./routes/chronicDiseaseRoutes');
 const medicationsRoutes = require('./routes/medicationsRoutes');
 
@@ -16,13 +16,15 @@ app.use(express.json());
 //app.use(express.static('public'));
 
 app.set('view engine', 'ejs');
-app.use('/patient', patientRoutes);
-app.use("/client_chronic_disease", ChronicDiseaseRoutes);
+
+//app.use('/patient', patientRoutes);
+app.use("/patient_chronic_disease", ChronicDiseaseRoutes);
 app.use("/patient_medications", medicationsRoutes);
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
+
 
 app.post('/upload', async (req, res) => {
     // Get the file that was set to our field named "picture" 

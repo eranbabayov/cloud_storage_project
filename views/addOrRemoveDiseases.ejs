@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Patient Diseases</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/themify-icons.css">
+    <link rel="stylesheet" href="css/nice-select.css">
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12 text-center mt-5">
+                <h2>Edit Patient Diseases</h2>
+                <p>Select a patient to add or remove chronic diseases.</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-4">
+            <div class="col-xl-6">
+                <form action="/patient_chronic_disease/edit_diseases" method="POST">
+                    <div class="form-group">
+                        <label for="patient-select">Choose Patient</label>
+                        <select class="form-select wide" id="patient-select" name="patient_id" required>
+                            <% patients.forEach(function(patient) { %>
+                                <option value="<%= patient.id %>"><%= patient.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label for="disease-select">Choose Disease to Add</label>
+                        <select class="form-select wide" id="disease-select" name="disease_id_add">
+                            <% diseases.forEach(function(disease) { %>
+                                <option value="<%= disease.id %>"><%= disease.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label for="remove-disease-select">Choose Disease to Remove</label>
+                        <select class="form-select wide" id="remove-disease-select" name="disease_id_remove">
+                            <% currentDiseases.forEach(function(disease) { %>
+                                <option value="<%= disease.id %>"><%= disease.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <button type="submit" class="boxed-btn3">Update Diseases</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS here -->
+    <script src="js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/nice-select.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

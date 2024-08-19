@@ -128,7 +128,7 @@
                         </div>
                         <h3>Edit client chronic Disease</h3>
                         <p>Add or remove chronic Disease for client</p>
-                        <a href="#" class="boxed-btn3-white">Edit list </a>
+                        <a href="/patient/edit-diseases" class="boxed-btn3-white">Edit list </a>
                     </div>
                 </div>
                 <div class="col-xl-4 col-md-4">
@@ -166,14 +166,14 @@
                 <form action="#">
                     <div class="row">
                         <div class="col-xl-6">
-                            <input type="text"  placeholder="Name" id="name" name="name">
+                            <input type="text"  placeholder="Name" id="name" name="name" required>
                         </div>
                         <div class="col-xl-6">
                             <input type="text" placeholder="Phone no." name="phone" id="phone" pattern="\d{10}" maxlength="10" title="Please enter a valid phone number" required>
                         </div>
 
                         <div class="col-xl-6">
-                            <select class="form-select wide" name="gender" id="gender-select" onchange="GenderChange(this)">
+                            <select class="form-select wide" name="gender" id="gender-select" onchange="GenderChange(this)" required>
                                 <option value="" disabled selected>Gender</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
@@ -182,12 +182,12 @@
                         </div>
 
                         <div class="col-xl-6">
-                            <input type="date" id="birthdate" name="birthdate" placeholder="Birthdate" onchange="calculateAge()">
+                            <input type="date" id="birthdate" name="birthdate" placeholder="Birthdate" onchange="calculateAge()" required>
                         </div>
 
                         
                         <div class="col-xl-6">
-                            <select class="form-select wide" id="pregnancy-select" name="pregnancy-select" >
+                            <select class="form-select wide" id="pregnancy-select" name="pregnancy-select" required>
                                 <option value="" disabled selected>Pregnancy</option>
                                 <option value="1">Pregnant</option>
                                 <option value="2">Not pregnant</option>
@@ -195,17 +195,17 @@
                         </div>
 
                         <div class="col-xl-6">
-                            <select class="form-select wide" id="nursing-select" name="nursing-select">
+                            <select class="form-select wide" id="nursing-select" name="nursing-select" required>
                                 <option value="" disabled selected>Nursing</option>
                                 <option value="1">Yes</option>
                                 <option value="2">No</option>
                             </select>
                         </div>
                         <div class="col-xl-12">
-                            <input type="email"  placeholder="Email" id="email" name="email">
+                            <input type="email"  placeholder="Email" id="email" name="email" required>
                         </div>
                         <div class="col-xl-12">
-                            <label for="client-image" class="client_image">Upload Client Image (PNG, JPEG)</label>
+                            <label for="client-image" class="client_image">Upload Client Image (PNG, JPEG)</label required>
                             <input type="file" id="client-image" name="photo" accept=".png, .jpeg, .jpg" onchange="checkNewImage(event)">
                         </div>
                         <div class="col-xl-12">
@@ -282,6 +282,10 @@
                         
                         // Clear the image input
                         event.target.value = '';
+                    }
+                    else{
+                        alert("Good Image!");
+
                     }
                 } catch (error) {
                     console.error("Error checking image:", error);

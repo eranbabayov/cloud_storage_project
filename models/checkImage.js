@@ -1,53 +1,40 @@
-const imaggaApiKey = 'acc_e443f856194719b';
-const imaggaApiSecret = '08edbb62940adc4e1a1fa2caf28a0577';
+async function checkImage(file) {
+    try {
+        // Create a FormData object to send the file
+        const formData = new FormData();
+        formData.append('image', file);
 
-const checkImage = async (picture) => {
-  try {
-    return True
-      // Use FileReader to convert the image file to a base64 string
-      const reader = new FileReader();
-      reader.readAsDataURL(picture);
-      
-      return new Promise((resolve, reject) => {
-          reader.onload = async () => {
-              const imageBase64 = reader.result.split(',')[1]; // Extract base64 string from the data URL
-              const formData = new FormData();
-              formData.append('image_base64', imageBase64);
-              
-              const requestOptions = {
-                  method: 'POST',
-                  headers: {
-                      Authorization: `Basic ${btoa(`${imaggaApiKey}:${imaggaApiSecret}`)}`,
-                  },
-                  body: formData,
-              };
-              
-              try {
-                  const response = await fetch('https://api.imagga.com/v2/tags', requestOptions);
-                  const responseObj = await response.json();
-                  alert(responseObj)
-                  const faceConfidences = responseObj.result.tags
-                      .filter(tag => tag.tag.en === "face")
-                      .map(tag => tag.confidence);
-                  
-                  if (faceConfidences.length > 0 && faceConfidences[0] > 40) {
-                      resolve(true);
-                  } else {
-                      resolve(false);
-                  }
-              } catch (error) {
-                  reject(error);
-              }
-          };
-          
-          reader.onerror = (error) => reject(error);
-      });
-      
-  } catch (error) {
-      throw new Error(error.message);
-  }
-};
+        // API credentials
+        const apiKey = 'acc_c4ce731bb14dcf7'; 
+        const apiSecret = '8d833fd35787d0450fc558d13451d0f2';
 
-        
-module.exports = { checkImage };
- 
+        // Send the image to Imagga for validation
+        const response = await fetch('https://api.imagga.com/v2/tags', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Basic ' + btoa(`${apiKey}:${apiSecret}`),
+            },
+            body: formData
+        });
+
+        // Check if the response is OK
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+
+        // Tags that indicate a face or face-related content
+        const faceTags = new Set(['face', 'human']);
+
+        // Check for face-related tags
+        const tags = data.result.tags;
+        const isFaceImage = tags.some(tag => faceTags.has(tag.tag.en.toLowerCase()));
+
+        return isFaceImage;
+
+    } catch (error) {
+        console.error('Error checking image:', error);
+        throw error;
+    }
+}

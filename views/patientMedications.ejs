@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Patient Diseases</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/themify-icons.css">
+    <link rel="stylesheet" href="css/nice-select.css">
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12 text-center mt-5">
+                <h2>Edit Patient Diseases</h2>
+                <p>Select a patient to add remove or edit medications.</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-4">
+            <div class="col-xl-6">
+                <form action="/patient_medications/edit_medications" method="POST">
+                    <div class="form-group">
+                        <label for="patient-select">Choose Patient</label>
+                        <select class="form-select wide" id="patient-select" name="patient_id" required>
+                            <% patients.forEach(function(patient) { %>
+                                <option value="<%= patient.id %>"><%= patient.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label for="disease-select">Choose medication to Add</label>
+                        <select class="form-select wide" id="disease-select" name="disease_id_add">
+                            <% medications.forEach(function(medication) { %>
+                                <option value="<%= disease.id %>"><%= medication.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label for="remove-disease-select">Choose medication to Remove</label>
+                        <select class="form-select wide" id="remove-disease-select" name="disease_id_remove">
+                            <% currentMedications.forEach(function(medication) { %>
+                                <option value="<%= disease.id %>"><%= medication.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <button type="submit" class="boxed-btn3">Update patient medications</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS here -->
+    <script src="js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/nice-select.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Patient Medications</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/themify-icons.css">
+    <link rel="stylesheet" href="css/nice-select.css">
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/style.css"> -->
+    
+    <!-- Inline CSS for additional styling -->
+    <!-- <style>
+        .form-section {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12 text-center mt-5">
+                <h2>Edit Patient Medications</h2>
+                <p>Select a patient to add, remove, or edit medications.</p>
+            </div>
+        </div> -->
+
+        <!-- <div class="row justify-content-center mt-4">
+            <div class="col-xl-6">
+                <form action="/patient_medications/edit_medications" method="POST">
+                    <div class="form-group">
+                        <label for="patient-select">Choose Patient</label>
+                        <select class="form-select wide" id="patient-select" name="patient_id" required>
+                            <% patients.forEach(function(patient) { %>
+                                <option value="<%= patient.id %>"><%= patient.name %></option>
+                            <% }) %>
+                        </select>
+                    </div> -->
+
+                    <!-- Action Selection (Add or Remove) -->
+                    <!-- <div class="form-group mt-4">
+                        <label for="action-select">Choose Action</label>
+                        <select class="form-select wide" id="action-select" name="action" required onchange="toggleFormSection()">
+                            <option value="" disabled selected>Select Action</option>
+                            <option value="add">Add Medication</option>
+                            <option value="remove">Remove Medication</option>
+                        </select>
+                    </div> -->
+
+                    <!-- Add Medication Section -->
+                    <!-- <div id="add-section" class="form-section mt-4">
+                        <label for="medication-select">Choose Medication to Add</label>
+                        <select class="form-select wide" id="medication-select" name="medication_id_add">
+                            <% medications.forEach(function(medication) { %>
+                                <option value="<%= medication.id %>"><%= medication.name %></option>
+                            <% }) %>
+                        </select>
+                    </div> -->
+
+                    <!-- Remove Medication Section -->
+                    <!-- <div id="remove-section" class="form-section mt-4">
+                        <label for="remove-medication-select">Choose Medication to Remove</label>
+                        <select class="form-select wide" id="remove-medication-select" name="medication_id_remove">
+                            <% currentMedications.forEach(function(medication) { %>
+                                <option value="<%= medication.id %>"><%= medication.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <button type="submit" class="boxed-btn3">Update Patient Medications</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- JS here -->
+    <!-- <script src="js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/nice-select.min.js"></script>
+    <script src="js/main.js"></script> -->
+
+    <!-- <script>
+        function toggleFormSection() {
+            const action = document.getElementById('action-select').value;
+            const addSection = document.getElementById('add-section');
+            const removeSection = document.getElementById('remove-section');
+
+            if (action === 'add') {
+                addSection.style.display = 'block';
+                removeSection.style.display = 'none';
+            } else if (action === 'remove') {
+                addSection.style.display = 'none';
+                removeSection.style.display = 'block';
+            } else {
+                addSection.style.display = 'none';
+                removeSection.style.display = 'none';
+            }
+        }
+    </script> -->
+<!-- </body>
+</html> -->

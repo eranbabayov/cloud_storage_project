@@ -10,6 +10,19 @@ async function getDisease(req, res) {
     }
 }
 
+async function editDiseases(req, res){
+    try {
+        const patients = await diseaseModel.editDiseases();
+        res.render('addOrRemoveDiseases', { patients: patients, diseases: [], currentDiseases: [] });
+      } catch (err) {
+        console.error('Error fetching patients:', err);
+        res.status(500).send('Internal Server Error');
+      }
+    
+};
+
+
 module.exports = {
-    getDisease
+    getDisease,
+    editDiseases
 };

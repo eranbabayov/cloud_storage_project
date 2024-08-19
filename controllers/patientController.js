@@ -43,7 +43,9 @@ async function addPatient(req, res) {
     }
 }
 
+
 module.exports = {
     listPatients,
-    addPatient
+    addPatient,
+    editDiseasesPage
 };

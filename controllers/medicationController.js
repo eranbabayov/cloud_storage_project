@@ -1,4 +1,5 @@
 const medicationModel = require('../models/medicationModel');
+const patientModel = require('../models/patientModel');
 
 async function medications(req, res) {
     try {
@@ -10,6 +11,19 @@ async function medications(req, res) {
     }
 }
 
+async function editMedications(req, res){
+    try {
+        const patients = await patientModel.getAllPatients();
+        const medications = await medicationModel.getMedication();
+        res.render('patientMedications', { patients: patients, medications: medications, currentMedications: [] });
+      } catch (err) {
+        console.error('Error fetching patients:', err);
+        res.status(500).send('Internal Server Error');
+      }
+    
+};
+
 module.exports = {
-    medications
+    medications,
+    editMedications
 };
