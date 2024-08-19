@@ -26,9 +26,7 @@ async function addPatient(req, res) {
     try {
         // Extract parameters from the request body
         const { name, birthdate, gender, pregnancy, nursing, phone, email } = req.body;
-        console.log(req.body)
         const img = req.file; // Assuming you handle the image as a file upload
-        console.log(req.file)
         // Convert pregnancy and nursing to boolean if needed
         const pregnancyBool = pregnancy === '1';
         const nursingBool = nursing === '1';

@@ -4,12 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Patient Diseases</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/themify-icons.css">
-    <link rel="stylesheet" href="css/nice-select.css">
-    <link rel="stylesheet" href="css/flaticon.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/themify-icons.css">
+    <link rel="stylesheet" href="../css/nice-select.css">
+    <link rel="stylesheet" href="../css/flaticon.css">
+    <link rel="stylesheet" href="../css/style.css">
+        <!-- Add the background image here -->
+    <style>
+        body {
+            background-image: url('../img/edit_diseases_background.jpg'); /* Replace with your image path */
+            background-size: cover; /* Cover the entire area */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-attachment: fixed; /* Fixed background image when scrolling */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -22,13 +32,24 @@
 
         <div class="row justify-content-center mt-4">
             <div class="col-xl-6">
-                <form action="/patient_chronic_disease/edit_diseases" method="POST">
+                <form action="/patient_chronic_disease/edit-diseases" method="POST">
+                    <!-- Patient Selection -->
                     <div class="form-group">
                         <label for="patient-select">Choose Patient</label>
-                        <select class="form-select wide" id="patient-select" name="patient_id" required>
+                        <select class="form-select wide" id="patient-select" name="patient_id" required onchange="updateDiseases()">
+                            <option value="" disabled selected>Select a patient</option>
                             <% patients.forEach(function(patient) { %>
-                                <option value="<%= patient.id %>"><%= patient.name %></option>
+                                <option value="<%= patient.Id %>"><%= patient.Name %></option>
                             <% }) %>
+                        </select>
+                    </div>
+
+                    <!-- Add Disease Section -->
+                    <!-- Remove Disease Section -->
+                    <div class="form-group mt-4">
+                        <label for="remove-disease-select">Choose Current Patient Disease To Remove</label>
+                        <select class="form-select wide" id="remove-disease-select" name="disease_id_remove">
+                            <!-- This will be dynamically populated based on the selected patient -->
                         </select>
                     </div>
 
@@ -36,22 +57,17 @@
                         <label for="disease-select">Choose Disease to Add</label>
                         <select class="form-select wide" id="disease-select" name="disease_id_add">
                             <% diseases.forEach(function(disease) { %>
-                                <option value="<%= disease.id %>"><%= disease.name %></option>
+                                <option value="<%= disease.Id %>"><%= disease.ChronicCondition %></option>
                             <% }) %>
                         </select>
                     </div>
 
-                    <div class="form-group mt-4">
-                        <label for="remove-disease-select">Choose Disease to Remove</label>
-                        <select class="form-select wide" id="remove-disease-select" name="disease_id_remove">
-                            <% currentDiseases.forEach(function(disease) { %>
-                                <option value="<%= disease.id %>"><%= disease.name %></option>
-                            <% }) %>
-                        </select>
-                    </div>
 
                     <div class="text-center mt-5">
-                        <button type="submit" class="boxed-btn3">Update Diseases</button>
+                        <button type="button" class="boxed-btn3 large-width" id="add-disease-button" onclick="addDisease()" >Add Disease</button>
+                        <button type="button" class="boxed-btn3 large-width" >Remove Diseases </button>
+                        <a href="/" class="boxed-btn3 large-width">Back to Homepage</a>
+
                     </div>
                 </form>
             </div>
@@ -59,9 +75,79 @@
     </div>
 
     <!-- JS here -->
-    <script src="js/vendor/jquery-1.12.4.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/nice-select.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="../js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/nice-select.min.js"></script>
+    <script src="../js/main.js"></script>
+
+    <!-- Inline JS to dynamically update diseases based on patient selection -->
+    <script>
+        const currentDiseases = <%- JSON.stringify(currentDiseases) %>;
+        function updateDiseases() {
+            const patientId = document.getElementById('patient-select').value;
+            if (!patientId) {
+            console.error('No patient selected!');
+            alert('No patient selected')
+            return;
+            }
+            const removeDiseaseSelect = document.getElementById('remove-disease-select');
+
+            // Clear the current options
+            removeDiseaseSelect.innerHTML = '';
+
+            // Filter diseases for the selected patient
+            const filteredDiseases = currentDiseases.filter(disease => disease.patient_id === parseInt(patientId));
+
+            // Populate the remove-disease-select dropdown with filtered diseases
+            filteredDiseases.forEach(disease => {
+                // Split the ChronicCondition string by comma
+                const diseasesArray = disease.ChronicCondition.split(',');
+
+                // Loop through each chronic condition and add it as a separate option
+                diseasesArray.forEach(singleDisease => {
+                    const option = document.createElement('option');
+                    option.value = disease.disease_id;  // Ensure this matches your data structure
+                    option.textContent = singleDisease.trim();  // Trim any extra whitespace
+                    removeDiseaseSelect.appendChild(option);
+                });
+            });
+        }
+    </script>
+    <script>
+        function addDisease() {
+            // Get the selected patient ID and disease ID
+            const patientId = document.getElementById('patient-select').value;
+            const diseaseId = document.getElementById('disease-select').value;
+
+            // Check if both patient and disease are selected
+            if (!patientId || !diseaseId) {
+                alert('Please select both a patient and a disease.');
+            }
+            else{
+                alert("ger")
+                // Send a POST request to the server to add the disease to the patient
+                fetch('/patient_chronic_disease/add_disease', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ patient_id: patientId, disease_id: diseaseId }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Disease added successfully!');
+                        // Optionally, refresh the page or update the UI to reflect the changes
+                    } else {
+                        alert('Failed to add disease.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+};
+
+    </script>
 </body>
 </html>

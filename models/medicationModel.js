@@ -14,7 +14,22 @@ async function getMedication() {
     }
 }
 
+async function getAllPatientMedications() {
+    try {
+        const connection = await db.get_connection();
+        const result = await connection.request().query(`
+            SELECT Id as patient_id, Medication
+            FROM Patients
+            WHERE Medication IS NOT NULL
+        `);
+        return result.recordset;
+    } catch (err) {
+        console.error('Error querying the database:', err);
+        throw err;
+    }
+}
 
 module.exports = {
     getMedication,
+    getAllPatientMedications
 };

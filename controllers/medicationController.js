@@ -15,7 +15,9 @@ async function editMedications(req, res){
     try {
         const patients = await patientModel.getAllPatients();
         const medications = await medicationModel.getMedication();
-        res.render('patientMedications', { patients: patients, medications: medications, currentMedications: [] });
+        const currentMedications = await medicationModel.getAllPatientMedications()
+        console.log(currentMedications)
+        res.render('patientMedications', { patients: patients, medications: medications, currentMedications: currentMedications });
       } catch (err) {
         console.error('Error fetching patients:', err);
         res.status(500).send('Internal Server Error');

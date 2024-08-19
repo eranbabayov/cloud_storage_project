@@ -3,89 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Patient Diseases</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/themify-icons.css">
-    <link rel="stylesheet" href="css/nice-select.css">
-    <link rel="stylesheet" href="css/flaticon.css">
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-12 text-center mt-5">
-                <h2>Edit Patient Diseases</h2>
-                <p>Select a patient to add remove or edit medications.</p>
-            </div>
-        </div>
-
-        <div class="row justify-content-center mt-4">
-            <div class="col-xl-6">
-                <form action="/patient_medications/edit_medications" method="POST">
-                    <div class="form-group">
-                        <label for="patient-select">Choose Patient</label>
-                        <select class="form-select wide" id="patient-select" name="patient_id" required>
-                            <% patients.forEach(function(patient) { %>
-                                <option value="<%= patient.id %>"><%= patient.name %></option>
-                            <% }) %>
-                        </select>
-                    </div>
-
-                    <div class="form-group mt-4">
-                        <label for="disease-select">Choose medication to Add</label>
-                        <select class="form-select wide" id="disease-select" name="disease_id_add">
-                            <% medications.forEach(function(medication) { %>
-                                <option value="<%= disease.id %>"><%= medication.name %></option>
-                            <% }) %>
-                        </select>
-                    </div>
-
-                    <div class="form-group mt-4">
-                        <label for="remove-disease-select">Choose medication to Remove</label>
-                        <select class="form-select wide" id="remove-disease-select" name="disease_id_remove">
-                            <% currentMedications.forEach(function(medication) { %>
-                                <option value="<%= disease.id %>"><%= medication.name %></option>
-                            <% }) %>
-                        </select>
-                    </div>
-
-                    <div class="text-center mt-5">
-                        <button type="submit" class="boxed-btn3">Update patient medications</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- JS here -->
-    <script src="js/vendor/jquery-1.12.4.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/nice-select.min.js"></script>
-    <script src="js/main.js"></script>
-</body>
-</html>
-
-
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Patient Medications</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/themify-icons.css">
-    <link rel="stylesheet" href="css/nice-select.css">
-    <link rel="stylesheet" href="css/flaticon.css">
-    <link rel="stylesheet" href="css/style.css"> -->
-    
-    <!-- Inline CSS for additional styling -->
-    <!-- <style>
-        .form-section {
-            display: none;
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/themify-icons.css">
+    <link rel="stylesheet" href="../css/nice-select.css">
+    <link rel="stylesheet" href="../css/flaticon.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- Add the background image here -->
+    <style>
+        body {
+            background-image: url('../img/edit_diseases_background.jpg'); /* Replace with your image path */
+            background-size: cover; /* Cover the entire area */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-attachment: fixed; /* Fixed background image when scrolling */
         }
     </style>
 </head>
@@ -96,81 +28,90 @@
                 <h2>Edit Patient Medications</h2>
                 <p>Select a patient to add, remove, or edit medications.</p>
             </div>
-        </div> -->
+        </div>
 
-        <!-- <div class="row justify-content-center mt-4">
+        <div class="row justify-content-center mt-4">
             <div class="col-xl-6">
                 <form action="/patient_medications/edit_medications" method="POST">
+                    <!-- Patient Selection -->
                     <div class="form-group">
                         <label for="patient-select">Choose Patient</label>
-                        <select class="form-select wide" id="patient-select" name="patient_id" required>
+                        <select class="form-select wide" id="patient-select" name="patient_id" required required onchange="updateMedication()">
+                            <option value="" disabled selected>Select a patient</option>
                             <% patients.forEach(function(patient) { %>
-                                <option value="<%= patient.id %>"><%= patient.name %></option>
+                                <option value="<%= patient.Id %>"><%= patient.Name %></option>
                             <% }) %>
                         </select>
-                    </div> -->
-
-                    <!-- Action Selection (Add or Remove) -->
-                    <!-- <div class="form-group mt-4">
-                        <label for="action-select">Choose Action</label>
-                        <select class="form-select wide" id="action-select" name="action" required onchange="toggleFormSection()">
-                            <option value="" disabled selected>Select Action</option>
-                            <option value="add">Add Medication</option>
-                            <option value="remove">Remove Medication</option>
-                        </select>
-                    </div> -->
+                    </div>
 
                     <!-- Add Medication Section -->
-                    <!-- <div id="add-section" class="form-section mt-4">
+                    <div class="form-group mt-4">
                         <label for="medication-select">Choose Medication to Add</label>
-                        <select class="form-select wide" id="medication-select" name="medication_id_add">
+                        <select class="form-select wide" id="medication-select" name="medication_id_add" >
                             <% medications.forEach(function(medication) { %>
-                                <option value="<%= medication.id %>"><%= medication.name %></option>
+                                <option value="<%= medication.Id %>"><%= medication.MedicationName %></option>
                             <% }) %>
                         </select>
-                    </div> -->
+                    </div>
 
                     <!-- Remove Medication Section -->
-                    <!-- <div id="remove-section" class="form-section mt-4">
+                    <div class="form-group mt-4">
                         <label for="remove-medication-select">Choose Medication to Remove</label>
                         <select class="form-select wide" id="remove-medication-select" name="medication_id_remove">
                             <% currentMedications.forEach(function(medication) { %>
-                                <option value="<%= medication.id %>"><%= medication.name %></option>
+                                <option value="<%= medication.Id %>"><%= medication.MedicationName %></option>
                             <% }) %>
                         </select>
                     </div>
 
                     <div class="text-center mt-5">
-                        <button type="submit" class="boxed-btn3">Update Patient Medications</button>
+                        <button type="submit" class="boxed-btn3 large-width">Update Patient Medications</button>
+                        <a href="/" class="boxed-btn3 large-width">Back to Homepage</a>
                     </div>
                 </form>
             </div>
         </div>
-    </div> -->
+    </div>
 
     <!-- JS here -->
-    <!-- <script src="js/vendor/jquery-1.12.4.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/nice-select.min.js"></script>
-    <script src="js/main.js"></script> -->
+    <script src="../js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/nice-select.min.js"></script>
+    <script src="../js/main.js"></script>
 
-    <!-- <script>
-        function toggleFormSection() {
-            const action = document.getElementById('action-select').value;
-            const addSection = document.getElementById('add-section');
-            const removeSection = document.getElementById('remove-section');
-
-            if (action === 'add') {
-                addSection.style.display = 'block';
-                removeSection.style.display = 'none';
-            } else if (action === 'remove') {
-                addSection.style.display = 'none';
-                removeSection.style.display = 'block';
-            } else {
-                addSection.style.display = 'none';
-                removeSection.style.display = 'none';
+    <!-- Inline JS for dynamic functionalities -->
+    <script>
+            const currentMedications = <%- JSON.stringify(currentMedications) %>;
+            alert(currentMedications[0].patient_id)
+        function updateMedication() {
+            const patientId = document.getElementById('patient-select').value;
+            if (!patientId) {
+            console.error('No patient selected!');
+            alert('No patient selected')
+            return;
             }
+            const removeMedicationSelect = document.getElementById('remove-medication-select');
+
+            // Clear the current options
+            removeMedicationSelect.innerHTML = '';
+
+            // Filter diseases for the selected patient
+            const filteredMedication = currentMedications.filter(medication => medication.patient_id === parseInt(patientId));
+            // Populate the remove-medication-select dropdown with filtered medication
+            filteredMedication.forEach(medication => {
+                // Split the medication string by comma
+                const medicationsArray = medication.Medication.split(',');
+
+                // Loop through each medication and add it as a separate option
+                medicationsArray.forEach(singleMedication => {
+                    const option = document.createElement('option');
+                    option.value = medication.medication_id;  // Ensure this matches your data structure
+                    option.textContent = singleMedication.trim();  // Trim any extra whitespace
+                    removeMedicationSelect.appendChild(option);
+                });
+            });
         }
-    </script> -->
-<!-- </body>
-</html> -->
+
+    </script>
+</body>
+</html>

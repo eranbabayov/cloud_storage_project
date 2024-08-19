@@ -7,3 +7,5 @@ router.get('/edit-diseases', diseaseController.editDiseases);
 router.get('/', diseaseController.getDisease);
 
 module.exports = router;
+
+module.exports = router;
