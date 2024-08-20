@@ -73,9 +73,34 @@ async function getAllPatientsMedicationMapping(){
 
 }
 
+async function getMedicationsForPatient(patient_id) {
+    try {
+        const connection = await db.get_connection();
+        const [result] = await connection.query(`SELECT Medication FROM Patients WHERE Id = ?`, [patient_id]);
+        return result.length > 0 ? result[0].Medication : null;
+    } catch (error) {
+        console.error('Error fetching medications:', error);
+        throw error;
+    }
+}
+
+async function updateMedicationsForPatient(patient_id, updatedMedications) {
+    try {
+        const connection = await db.get_connection();
+        const updateResult = await connection.query(`UPDATE Patients SET Medication = ? WHERE Id = ?`, [updatedMedications, patient_id]);
+        return updateResult.affectedRows > 0;
+    } catch (error) {
+        console.error('Error updating medications:', error);
+        throw error;
+    }
+}
+
+
 
 module.exports = {
     getMedication,
     getAllPatientMedications,
-    getAllPatientsMedicationMapping
+    getAllPatientsMedicationMapping,
+    getMedicationsForPatient,
+    updateMedicationsForPatient
 };

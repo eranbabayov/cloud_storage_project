@@ -65,7 +65,9 @@
                     </div>
 
                     <div class="text-center mt-5">
-                        <button type="submit" class="boxed-btn3 large-width">Update Patient Medications</button>
+                        <button type="submit" class="boxed-btn3 large-width">Add Patient Medications</button>
+                        <button type="button" class="boxed-btn3 large-width" onclick="removeMedication()">Remove Patient Medications</button>
+
                         <a href="/" class="boxed-btn3 large-width">Back to Homepage</a>
                     </div>
                 </form>
@@ -81,8 +83,7 @@
 
     <!-- Inline JS for dynamic functionalities -->
     <script>
-        const currentMedications = <% JSON.stringify(currentMedications) %>;
-        
+        const currentMedications = <%- JSON.stringify(currentMedications) %>;
         function updateMedication() {
             const patientId = document.getElementById('patient-select').value;
             if (!patientId) {
@@ -137,6 +138,39 @@
 
 
         }
+        
+        function removeMedication() {
+            const patientId = document.getElementById('patient-select').value;
+            const removeMedicationSelect = document.getElementById('remove-medication-select');
+            const selectedMedication = removeMedicationSelect.options[removeMedicationSelect.selectedIndex].text;
+
+            if (!patientId || !selectedMedication) {
+                alert('Please select both a patient and a medication to remove.');
+                return;
+            }
+        
+            fetch('/patient_medications/remove_medication', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ patient_id: patientId, medication: selectedMedication }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Medication removed successfully!');
+                    // Optionally, refresh the page or update the UI
+                } else {
+                    alert(data.message || 'Failed to remove medication.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while removing the medication.');
+            });
+}
+
     </script>
 </body>
 </html>
