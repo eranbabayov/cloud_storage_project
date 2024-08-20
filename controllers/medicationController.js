@@ -17,7 +17,6 @@ async function editMedications(req, res){
         const medications = await medicationModel.getMedication();
         const currentMedications = await medicationModel.getAllPatientMedications()
         const  PatientsMedicationMapping = await medicationModel.getAllPatientsMedicationMapping()
-        console.log(PatientsMedicationMapping)
         res.render('patientMedications', { patients: patients, medications: medications, currentMedications: currentMedications , PatientsMedicationMapping: PatientsMedicationMapping});
       } catch (err) {
         console.error('Error fetching patients:', err);

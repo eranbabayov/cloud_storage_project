@@ -55,17 +55,18 @@
 
                     <div class="form-group mt-4">
                         <label for="disease-select">Choose Disease to Add</label>
-                        <select class="form-select wide" id="disease-select" name="disease_id_add">
+                        <select class="form-select wide" id="disease-select" name="disease_id_add" required>
+                            <option disabled selected>Select a disease</option> <!-- Added default option -->
                             <% diseases.forEach(function(disease) { %>
-                                <option value="<%= disease.Id %>"><%= disease.ChronicCondition %></option>
+                                <option value="<%= disease.ChronicCondition%>"><%= disease.ChronicCondition %></option>
                             <% }) %>
                         </select>
                     </div>
-
+                    
 
                     <div class="text-center mt-5">
                         <button type="button" class="boxed-btn3 large-width" id="add-disease-button" onclick="addDisease()" >Add Disease</button>
-                        <button type="button" class="boxed-btn3 large-width" >Remove Diseases </button>
+                        <button type="button" class="boxed-btn3 large-width" id="remove-disease-button" onclick="removeDisease()">Remove Disease</button>
                         <a href="/" class="boxed-btn3 large-width">Back to Homepage</a>
 
                     </div>
@@ -114,40 +115,81 @@
             });
         }
     </script>
-    <script>
-        function addDisease() {
-            // Get the selected patient ID and disease ID
-            const patientId = document.getElementById('patient-select').value;
-            const diseaseId = document.getElementById('disease-select').value;
 
-            // Check if both patient and disease are selected
-            if (!patientId || !diseaseId) {
-                alert('Please select both a patient and a disease.');
-            }
-            else{
-                alert("ger")
-                // Send a POST request to the server to add the disease to the patient
-                fetch('/patient_chronic_disease/add_disease', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ patient_id: patientId, disease_id: diseaseId }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Disease added successfully!');
-                        // Optionally, refresh the page or update the UI to reflect the changes
-                    } else {
-                        alert('Failed to add disease.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+    <script>
+    function addDisease() {
+        const patientId = document.getElementById('patient-select').value;
+        const disease = document.getElementById('disease-select').value;
+
+        if (!patientId || !disease) {
+            alert('Please select both a patient and a disease.');
+            return;
         }
-};
+
+        fetch('/patient_chronic_disease/add_disease', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ patient_id: patientId, disease: disease }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                // Handle non-JSON responses (e.g., HTML error pages)
+                return response.text().then(text => { throw new Error(text); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                alert('Disease added successfully!');
+                // Optionally, refresh the page or update the UI
+            } else {
+                alert(data.message || 'Failed to add disease.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while adding the disease.');
+            alert(error)
+        });
+    }
+
+    </script>
+    <script>
+    function removeDisease() {
+        const patientId = document.getElementById('patient-select').value;
+        const diseaseSelectElement = document.getElementById('remove-disease-select');
+        const selectedDiseaseText = diseaseSelectElement.options[diseaseSelectElement.selectedIndex].text;
+
+        const disease = selectedDiseaseText;
+
+        if (!patientId || !disease) {
+            alert('Please select both a patient and a disease to remove.');
+            return;
+        }
+
+        fetch('/patient_chronic_disease/remove_disease', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ patient_id: patientId, disease: disease }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Disease removed successfully!');
+                // Optionally, refresh the page or update the UI
+            } else {
+                alert(data.message || 'Failed to remove disease.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while removing the disease.');
+        });
+}
 
     </script>
 </body>

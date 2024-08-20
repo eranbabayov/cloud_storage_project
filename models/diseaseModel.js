@@ -33,6 +33,52 @@ async function getDiseasesByPatientId(patient_id) {
     }
 }
 
+async function addNewDisease(patient_id, newDisease) {
+    try {
+        const connection = await db.get_connection();
+
+        // Step 1: Get the current diseases for the patient
+        const result = await connection.request()
+            .input('patientId', sql.Int, patient_id)
+            .query('SELECT ChronicCondition FROM Patients WHERE Id = @patientId');
+
+        if (result.recordset.length === 0) {
+            throw new Error('Patient not found');
+        }
+
+        let currentDiseases = result.recordset[0].ChronicCondition;
+
+        // Step 2: Check if the disease already exists
+        if (currentDiseases && currentDiseases.split(',').map(d => d.trim()).includes(newDisease)) {
+            return { success: false, message: 'Patient already has this disease.' };
+        }
+
+        // Step 3: Append the new disease to the existing list
+        let updatedDiseases;
+        if (currentDiseases) {
+            updatedDiseases = `${currentDiseases}, ${newDisease}`;
+        } else {
+            updatedDiseases = newDisease;
+        }
+
+        // Step 4: Update the patient's ChronicCondition field with the new disease list
+        const updateResult = await connection.request()
+            .input('updatedDiseases', sql.NVarChar, updatedDiseases)
+            .input('patientId', sql.Int, patient_id)
+            .query('UPDATE Patients SET ChronicCondition = @updatedDiseases WHERE Id = @patientId');
+
+        // Step 5: Check if the update was successful
+        if (updateResult.rowsAffected[0] > 0) {
+            return { success: true };
+        } else {
+            return { success: false, message: 'Failed to add disease.' };
+        }
+    } catch (error) {
+        console.error('Error adding disease:', error);
+        throw error;
+    }
+}
+
 async function getAllPatientDiseases() {
     try {
         const connection = await db.get_connection();
@@ -48,9 +94,45 @@ async function getAllPatientDiseases() {
     }
 }
 
+async function removeDiseaseFromPatient(patient_id, disease) {
+    try {
+        const connection = await db.get_connection();
+        const result = await connection.request()
+            .input('patientId', sql.Int, patient_id)
+            .query('SELECT ChronicCondition FROM Patients WHERE Id = @patientId');
+
+        if (result.recordset.length === 0) {
+            throw new Error('Patient not found.');
+        }
+        let currentDiseases = result.recordset[0].ChronicCondition;
+        let diseasesArray = currentDiseases.split(',');
+        if (!diseasesArray.includes(disease)) {
+            return { success: false, message: 'Disease not found for this patient.', diseasesArray };
+        }
+
+        diseasesArray = diseasesArray.filter(d => d !== disease);
+        const updatedDiseases = diseasesArray.join(', ');
+
+        const updateResult = await connection.request()
+            .input('updatedDiseases', sql.NVarChar, updatedDiseases)
+            .input('patientId', sql.Int, patient_id)
+            .query('UPDATE Patients SET ChronicCondition = @updatedDiseases WHERE Id = @patientId');
+
+        if (updateResult.rowsAffected[0] > 0) {
+            return { success: true };
+        } else {
+            return { success: false, message: 'Failed to remove disease.' };
+        }
+    } catch (error) {
+        console.error('Error removing disease:', error);
+        throw error;
+    }
+}
 
 module.exports = {
     getAllDiseases,
     getDiseasesByPatientId,
-    getAllPatientDiseases
+    getAllPatientDiseases,
+    addNewDisease,
+    removeDiseaseFromPatient
 };
