@@ -81,7 +81,8 @@
 
     <!-- Inline JS for dynamic functionalities -->
     <script>
-        const currentMedications = <%- JSON.stringify(currentMedications) %>;
+        const currentMedications = JSON.stringify(currentMedications) ;
+        
         function updateMedication() {
             const patientId = document.getElementById('patient-select').value;
             if (!patientId) {
