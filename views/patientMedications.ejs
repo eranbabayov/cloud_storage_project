@@ -32,7 +32,7 @@
 
         <div class="row justify-content-center mt-4">
             <div class="col-xl-6">
-                <form action="/patient_medications/edit_medications" method="POST">
+                <form action="/patient_medications/edit_medications" method="Post">
                     <!-- Patient Selection -->
                     <div class="form-group">
                         <label for="patient-select">Choose Patient</label>
@@ -47,9 +47,9 @@
                     <!-- Add Medication Section -->
                     <div class="form-group mt-4">
                         <label for="medication-select">Choose Medication to Add</label>
-                        <select class="form-select wide" id="medication-select" name="medication_id_add" onchange="newMedicanAdding()" >
+                        <select class="form-select wide" id="medication-select" name="medication_id_add" >
                             <% medications.forEach(function(medication) { %>
-                                <option value="<%= medication.Id %>"><%= medication.MedicationName %></option>
+                                <option value="<%= medication.MedicationName %>"><%= medication.MedicationName %></option>
                             <% }) %>
                         </select>
                     </div>
@@ -65,7 +65,7 @@
                     </div>
 
                     <div class="text-center mt-5">
-                        <button type="submit" class="boxed-btn3 large-width">Add Patient Medications</button>
+                        <button type="submit" class="boxed-btn3 large-width" onclick="addMedication()"> Add Patient Medications</button>
                         <button type="button" class="boxed-btn3 large-width" onclick="removeMedication()">Remove Patient Medications</button>
 
                         <a href="/" class="boxed-btn3 large-width">Back to Homepage</a>
@@ -114,35 +114,12 @@
         }
 
         // function validateSettingNewMedication(new_medication, medicationsCode, )
-
-        function newMedicanAdding(){
-            const patientId = document.getElementById('patient-select').value;
-            if (!patientId) {
-                console.error('No patient selected!');
-                alert('No patient selected')
-                return;
-            }
-            const medicanSelect = document.getElementById('medication-select').value;
-
-            const filteredMedication = currentMedications.filter(medication => medication.patient_id === parseInt(patientId));
-            // filteredMedication.forEach(medication => {
-            //     // Split the medication string by comma
-            //     const medicationsArray = medication.Medication.split(',');
-            //     // Loop through each medication and add it as a separate option
-            //     medicationsArray.forEach(singleMedication => {
-            //         if (medication.Medication){
-
-            //         }
-            //     });
-            // });
-
-
-        }
         
         function removeMedication() {
             const patientId = document.getElementById('patient-select').value;
             const removeMedicationSelect = document.getElementById('remove-medication-select');
             const selectedMedication = removeMedicationSelect.options[removeMedicationSelect.selectedIndex].text;
+            alert(selectedMedication)
 
             if (!patientId || !selectedMedication) {
                 alert('Please select both a patient and a medication to remove.');
@@ -167,9 +144,44 @@
             })
             .catch(error => {
                 console.error('Error:', error);
+                alert(error)
                 alert('An error occurred while removing the medication.');
             });
-}
+        }
+
+        function addMedication() {
+            const patientId = document.getElementById('patient-select').value;
+            const medication = document.getElementById('medication-select').value;
+
+            if (!patientId || !medication) {
+                alert('Please select both a patient and a medication.');
+                return;
+            }
+            fetch('/patient_medications/add_medication', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ patient_id: patientId, medication: medication }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Medication added successfully!');
+                    // Optionally, refresh the page or update the UI
+                } else {
+                    alert(data.message || 'Failed to add medication.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error)
+                alert('An error occurred while adding the medication.');
+            });
+        }
+
+
+
 
     </script>
 </body>

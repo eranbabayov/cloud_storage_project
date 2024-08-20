@@ -1,6 +1,7 @@
 // models/patientModel.js
 
 const db = require('./DataBase'); // Updated to use data_base.js
+const sql = require('mssql');
 
 async function getMedication() {
     try {
@@ -76,8 +77,10 @@ async function getAllPatientsMedicationMapping(){
 async function getMedicationsForPatient(patient_id) {
     try {
         const connection = await db.get_connection();
-        const [result] = await connection.query(`SELECT Medication FROM Patients WHERE Id = ?`, [patient_id]);
-        return result.length > 0 ? result[0].Medication : null;
+        const result = await connection.request()
+            .input('patientId', sql.Int, patient_id) // Use .input() to add parameter
+            .query('SELECT Medication FROM Patients WHERE Id = @patientId'); // Use named parameter
+        return result.recordset[0].Medication;
     } catch (error) {
         console.error('Error fetching medications:', error);
         throw error;
@@ -87,14 +90,78 @@ async function getMedicationsForPatient(patient_id) {
 async function updateMedicationsForPatient(patient_id, updatedMedications) {
     try {
         const connection = await db.get_connection();
-        const updateResult = await connection.query(`UPDATE Patients SET Medication = ? WHERE Id = ?`, [updatedMedications, patient_id]);
-        return updateResult.affectedRows > 0;
+        const result = await connection.request()
+            .input('updatedMedications', sql.VarChar, updatedMedications) // Use .input() for updatedMedications
+            .input('patientId', sql.Int, patient_id) // Use .input() for patient_id
+            .query('UPDATE Patients SET Medication = @updatedMedications WHERE Id = @patientId'); // Use named parameters
+
+        return result.rowsAffected[0] > 0; // Check if any rows were updated
     } catch (error) {
         console.error('Error updating medications:', error);
         throw error;
     }
 }
 
+async function checkMedicationExists(patient_id, medication) {
+    try {
+        const connection = await db.get_connection();
+        const result = await connection.request()
+            .input('patientId', sql.Int, patient_id)
+            .query('SELECT Medication FROM Patients WHERE Id = @patientId');
+
+        if (result.recordset.length === 0) {
+            throw new Error('Patient not found.');
+        }
+
+        let currentMedications = result.recordset[0].Medication;
+
+        if (currentMedications) {
+            let medicationsArray = currentMedications.split(',').map(med => med.trim());
+            return medicationsArray.includes(medication); // Return true if the medication already exists
+        }
+
+        return false; // Return false if no medications exist yet
+    } catch (error) {
+        console.error('Error checking medication:', error);
+        throw error;
+    }
+}
+
+async function getMedicationCode(medicationName) {
+    try {
+        const connection = await db.get_connection();
+        const result = await connection.request()
+            .input('medicationName', sql.VarChar, medicationName)
+            .query('SELECT MedicationCode FROM Medications WHERE MedicationName = @medicationName');
+
+        return result.recordset.length > 0 ? result.recordset[0].MedicationCode : null;
+    } catch (error) {
+        console.error('Error fetching medication code:', error);
+        throw error;
+    }
+}
+
+async function getMedicationCodes(medicationNamesArray) {
+    try {
+
+        const connection = await db.get_connection();
+        const request = connection.request();
+
+        // Dynamically add each medication name as a parameter
+        medicationNamesArray.forEach((name, index) => {
+            request.input(`name${index}`, sql.VarChar, name);
+        });
+        // Generate the SQL query with dynamic parameters
+        const query = `SELECT MedicationCode FROM Medications WHERE MedicationName IN (${medicationNamesArray.map((_, index) => `@name${index}`).join(', ')})`;
+
+        const result = await request.query(query);
+
+        return result.recordset.map(row => row.MedicationCode);
+    } catch (error) {
+        console.error('Error fetching medication codes:', error);
+        throw error;
+    }
+}
 
 
 module.exports = {
@@ -102,5 +169,8 @@ module.exports = {
     getAllPatientMedications,
     getAllPatientsMedicationMapping,
     getMedicationsForPatient,
-    updateMedicationsForPatient
+    updateMedicationsForPatient,
+    checkMedicationExists,
+    getMedicationCode,
+    getMedicationCodes
 };
