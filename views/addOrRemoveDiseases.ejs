@@ -82,7 +82,8 @@
 
     <!-- Inline JS to dynamically update diseases based on patient selection -->
     <script>
-        const currentDiseases = JSON.stringify(currentDiseases);
+        const currentDiseases = <%- JSON.stringify(currentDiseases) %>;
+        
         function updateDiseases() {
             const patientId = document.getElementById('patient-select').value;
             if (!patientId) {
