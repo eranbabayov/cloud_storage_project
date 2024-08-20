@@ -23,6 +23,9 @@ async function add_new_client(name, birthdate, gender, pregnancy, nursing, Phone
             nursing = false
             breast_feeding = false
         }
+        const maxIdResult = await connection.request().query('SELECT ISNULL(MAX(Id), 0) AS MaxId FROM Patients');
+        const maxId = maxIdResult.recordset[0].MaxId;
+
         const query = `
             INSERT INTO Patients (Id, Name, Gender, Pregnancy, Nursing ,Birthdate, Photo, Email, Phone, ChronicCondition)
             VALUES (@Id, @Name, @gender, @Pregnancy, @nursing, @birthdate, @Photo, @Email, @Phone, NULL)
@@ -30,7 +33,7 @@ async function add_new_client(name, birthdate, gender, pregnancy, nursing, Phone
         
         // Use the connection to create a request and pass the parameters
         const request = connection.request();
-        request.input('Id', sql.Int, 20);
+        request.input('Id', sql.Int, maxId+1);
         request.input('Name', sql.NVarChar, name);
         request.input('gender', sql.NVarChar, gender);
         request.input('Pregnancy', sql.Bit, pregnancy);
