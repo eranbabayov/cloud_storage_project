@@ -30,43 +30,63 @@ async function getAllPatientMedications() {
     }
 }
 
-async function getAllPatientsMedicationMapping(){
+async function getdiseaseToMedicationsDict(patients) {
     try {
         const connection = await db.get_connection();
-            const result = await connection.request().query(`WITH SplitMedications AS (
-            SELECT
-                Id AS PatientId,
-                LTRIM(RTRIM(SUBSTRING(Medication, 1, CHARINDEX(',', Medication + ',') - 1))) AS MedicationName,
-                SUBSTRING(Medication, CHARINDEX(',', Medication + ',') + 1, LEN(Medication)) AS RemainingMedications
-            FROM
-                Patients
-            WHERE
-                Medication IS NOT NULL AND LEN(Medication) > 0
-            UNION ALL
-            SELECT
-                PatientId,
-                LTRIM(RTRIM(SUBSTRING(RemainingMedications, 1, CHARINDEX(',', RemainingMedications + ',') - 1))) AS MedicationName,
-                SUBSTRING(RemainingMedications, CHARINDEX(',', RemainingMedications + ',') + 1, LEN(RemainingMedications)) AS RemainingMedications
-            FROM
-                SplitMedications
-            WHERE
-                LEN(RemainingMedications) > 0
-            )
-            SELECT
-                p.Id AS PatientId,
-                sm.MedicationName,
-                m.MedicationCode
-            FROM
-                SplitMedications sm
-            JOIN
-                medications m ON sm.MedicationName = m.MedicationName
-            JOIN
-                Patients p ON p.Id = sm.PatientId
-            WHERE
-                sm.MedicationName IS NOT NULL AND sm.MedicationName <> ''
-            ORDER BY
-            p.Id, sm.MedicationName;`)
-            return result.recordset;
+
+        // Get all diseases
+        const result = await connection.request().query(`SELECT DiseaseName, DiseaseCode FROM Diseases;`);
+        const allDiseases = result.recordset;
+        let diseasesDict = {};
+
+        // Build the diseases dictionary
+        allDiseases.forEach(disease => {
+            diseasesDict[disease.DiseaseCode] = disease.DiseaseName;
+        });
+
+        // Get all medications
+        const medicationsResult = await connection.request().query(`SELECT MedicationName, MedicationCode FROM Medications`);
+        const allMedications = medicationsResult.recordset;
+        let medicationsDict = {};
+
+        // Build the medications dictionary
+        allMedications.forEach(medication => {
+            medicationsDict[medication.MedicationCode] = medication.MedicationName;
+        });
+
+        // Fetch data from the KEGG API
+        const res = await fetch("https://rest.kegg.jp/link/drug/disease");
+        const data = await res.text();
+
+        // Split the data into lines and create a mapping of disease to medications
+        const lines = data.split('\n');
+        let diseaseToMedicationsDict = {};
+
+        lines.forEach(line => {
+            const [diseaseCode, drugCode] = line.split('\t');
+
+            if (diseasesDict[diseaseCode.replace('ds:', '')]) {
+                const diseaseName = diseasesDict[diseaseCode.replace('ds:', '')];
+                const medicationCode = drugCode.replace('dr:', '');
+
+                if (!diseaseToMedicationsDict[diseaseName]) {
+                    diseaseToMedicationsDict[diseaseName] = [];
+                }
+
+                // Add medication name instead of medication code
+                if (medicationsDict[medicationCode]) {
+                    diseaseToMedicationsDict[diseaseName].push(medicationsDict[medicationCode]);
+                }
+            }
+        });
+        let patientsOptionalMedicationsDict = {}
+        patients.forEach(patient => {
+            if (patient.ChronicCondition == null)	{
+                patientsOptionalMedicationsDict[patient.Name] = "Choosen patients feeling good"
+        }
+    })
+        return diseaseToMedicationsDict;
+
     } catch (err) {
         console.error('Error querying the database:', err);
         throw err;
@@ -167,7 +187,7 @@ async function getMedicationCodes(medicationNamesArray) {
 module.exports = {
     getMedication,
     getAllPatientMedications,
-    getAllPatientsMedicationMapping,
+    getdiseaseToMedicationsDict,
     getMedicationsForPatient,
     updateMedicationsForPatient,
     checkMedicationExists,

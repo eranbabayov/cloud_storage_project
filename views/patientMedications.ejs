@@ -19,6 +19,46 @@
             background-repeat: no-repeat; /* Do not repeat the image */
             background-attachment: fixed; /* Fixed background image when scrolling */
         }
+        .boxed-btn3 {
+            display: inline-block;
+            padding: 10px 20px; /* Adjust padding as needed */
+            font-size: 16px; /* Adjust font size */
+            border: 2px solid #ccc; /* Example border */
+            border-radius: 5px; /* Rounded corners */
+            background-color: #f8f9fa; /* Background color */
+            color: #333; /* Text color */
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Add hover effects */
+        .boxed-btn3:hover {
+            background-color: #333;
+            color: #fff;
+        }
+        
+        #patientImageContainer {
+            width: 165px;
+            height: 165px;
+            border: 3px solid #cccccc;
+            padding: 2px;
+            background-color: white;
+            display: none; /* Start with the container hidden */
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: absolute; /* Position the container absolutely */
+            top: 200px; /* Adjust the top position */
+            right: 350px; /* Adjust the right position */
+            z-index: 10; /* Ensure it stays on top of other content */
+        }
+
+        #patientImage {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
@@ -111,6 +151,8 @@
                     removeMedicationSelect.appendChild(option);
                 });
             });
+
+
         }
 
         // function validateSettingNewMedication(new_medication, medicationsCode, )
