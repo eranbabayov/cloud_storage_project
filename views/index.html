@@ -81,7 +81,7 @@
                         <div class="col-xl-3 col-lg-3 d-none d-lg-block">
                             <div class="Appointment">
                                 <div class="book_btn d-none d-lg-block">
-                                    <a class="popup-with-form" href="#test-form">Add New Patient</a>
+                                    <a class="popup-with-form">Log Out</a>
                                 </div>
                             </div>
                         </div>
@@ -102,14 +102,14 @@
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="slider_text ">
-                            <h3> <span>Welcome Doctor</span> <br>
-                                patient data organize </h3>
-                                <p>How can we help you today? <br> To Add new patient click below.</p>
-                                <div class="Appointment">
-                                    <div class="book_btn">
-                                        <a class="popup-with-form boxed-btn3" href="#test-form">Add New Patient</a>
-                                    </div>
+                            <h3 style="margin-bottom: 50px;"> <span>Welcome Doctor</span> <br></h3>
+                            <!-- <h3> patient data organize </h3> -->
+                            <p><strong>How can we help you today?</strong></p>
+                            <p>To Add new patient click below.</p>
+                             <div class="book_btn">
+                                    <a class="popup-with-form boxed-btn3" href="#test-form">Add New Patient</a>
                                 </div>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -126,19 +126,9 @@
                         <div class="icon">
                             <i class="flaticon-electrocardiogram"></i>
                         </div>
-                        <h3>Edit client chronic Disease</h3>
-                        <p>Add or remove chronic Disease for client</p>
-                        <a href="/patient_chronic_disease/edit-diseases" class="boxed-btn3-white">Edit list </a>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-md-4">
-                    <div class="single_service">
-                        <div class="icon">
-                            <i class="flaticon-emergency-call"></i>
-                        </div>
-                        <h3>Call for website support more text</h3>
-                        <p>Call for our system for website support more text.</p>
-                        <a href="#" class="boxed-btn3-white">+972 672 356 3567</a>
+                        <h3>Edit chronic disease</h3>
+                        <p>Add or remove chronic disease for patient</p>
+                        <a href="/patient_chronic_disease/edit-diseases" class="boxed-btn3-white">Edit patient disease</a>
                     </div>
                 </div>
                 <div class="col-xl-4 col-md-4">
@@ -146,9 +136,20 @@
                         <div class="icon">
                             <i class="flaticon-first-aid-kit"></i>
                         </div>
-                        <h3>Edit patient medications list</h3>
-                        <p>Add, Delete or edit patient medications list</p>
-                        <a href="/patient_medications/edit_medications" class="boxed-btn3-white">edit patient medications</a>
+                        <h3>Edit medications list</h3>
+                        <p>Add or remove medications for patient</p>
+                        <a href="/patient_medications/edit_medications" class="boxed-btn3-white">Edit patient medications</a>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-4">
+                    <div class="single_service">
+                        <div class="icon">
+                            <i class="flaticon-emergency-call"></i>
+                        </div>
+                        <h3>Call for support</h3>
+                        <p>Call for our system for website support</p>
+                        <a href="#" class="boxed-btn3-white">+972 54 819 3399 </a>
+                        <a href="#" class="boxed-btn3-white">+972 54 420 7422 </a>  
                     </div>
                 </div>
             </div>
@@ -162,7 +163,7 @@
     <form id="test-form" class="white-popup-block mfp-hide" action="/patient/add" method="POST" enctype="multipart/form-data">
         <div class="popup_box ">
             <div class="popup_inner">
-                <h3>Add client</h3>
+                <h3>Add Patient</h3>
                 <form action="#">
                     <div class="row">
                         <div class="col-xl-6">
@@ -183,6 +184,7 @@
 
                         <div class="col-xl-6">
                             <input type="date" id="birthdate" name="birthdate" placeholder="Birthdate" onchange="calculateAge()" required>
+                            <p id="age-display">Age: </p>
                         </div>
 
                         

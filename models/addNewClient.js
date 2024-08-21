@@ -80,28 +80,24 @@ async function checkNewImage(event) {
 }
 
 function calculateAge() {
-    const birthdateInput = document.getElementById('birthdate');
-    const birthdate = new Date(birthdateInput.value);
-    const today = new Date();
-
-    let ageYears = today.getFullYear() - birthdate.getFullYear();
-    let ageMonths = today.getMonth() - birthdate.getMonth();
-
-    // Adjust calculation if the birthday hasn't occurred yet this year
-    if (ageMonths < 0) {
-        ageYears--;
-        ageMonths += 12;
+    const birthdateInput = document.getElementById('birthdate').value;
+    const birthdate = new Date(birthdateInput);
+    const now = new Date();
+    
+    if (!birthdateInput) {
+        document.getElementById('age-display').textContent = 'Age: ';
+        return;
     }
 
-    // Combine years and months into a decimal format, e.g., 10.3 for 10 years and 3 months
-    const ageInYearsAndMonths = ageYears + (ageMonths / 12);
+    let ageMonths = (now.getFullYear() - birthdate.getFullYear()) * 12;
+    ageMonths -= birthdate.getMonth();
+    ageMonths += now.getMonth();
 
-    // Output or store the calculated age
-    console.log('Age in years and months:', ageInYearsAndMonths.toFixed(1)); // e.g., 10.3
+    const ageYears = Math.floor(ageMonths / 12);
+    const remainingMonths = ageMonths % 12;
 
-    // Store the age value in a hidden input for form submission
-    document.getElementById('ageValue').value = ageInYearsAndMonths.toFixed(1);
-}
+    document.getElementById('age-display').textContent = `Age: ${ageYears}.${remainingMonths}`;
+}  
 
 // Set the max attribute for the date input to prevent selecting future dates
 document.addEventListener('DOMContentLoaded', function() {
