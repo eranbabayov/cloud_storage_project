@@ -79,7 +79,7 @@
                         <select class="form-select wide" id="patient-select" name="patient_id" required onchange="updateMedication()">
                             <option value="" disabled selected>Select a patient</option>
                             <% patients.forEach(function(patient) { %>
-                                <option value="<%= patient.Id %>"><%= patient.Name %></option>
+                                <option value="<%= patient.Id %>" data-image="<%= patient.ImageUrl %>"><%= patient.Name %></option>
                             <% }) %>
                         </select>
                     </div>
@@ -114,16 +114,22 @@
             </div>
         </div>
     </div>
+    <!-- Patient Image Display Section -->
+    <div id="patientImageContainer">
+        <img id="patientImage" src="" alt="Patient Image">
+    </div>
 
     <!-- JS here -->
     <script src="../js/vendor/jquery-1.12.4.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/nice-select.min.js"></script>
     <script src="../js/main.js"></script>
+    <script src="/image-handler.js"></script>
 
     <!-- Inline JS for dynamic functionalities -->
     <script>
         const currentMedications = <%- JSON.stringify(currentMedications) %>;
+
         function updateMedication() {
             const patientId = document.getElementById('patient-select').value;
             if (!patientId) {
@@ -131,6 +137,16 @@
             alert('No patient selected')
             return;
             }
+            const patientImageUrl = patientSelect.options[patientSelect.selectedIndex].getAttribute('data-image');
+            const patientImageContainer = document.getElementById('patientImageContainer');
+            const patientImage = document.getElementById('patientImage');
+            if (patientImageUrl) {
+                patientImage.src = patientImageUrl;
+                patientImageContainer.style.display = 'flex'; // Show the container
+            } else {
+                patientImageContainer.style.display = 'none'; // Hide the container if no image
+            }
+
             const removeMedicationSelect = document.getElementById('remove-medication-select');
 
             // Clear the current options

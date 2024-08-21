@@ -14,6 +14,32 @@ async function getAllPatients() {
     }
 }
 
+async function getImageUsingId(patientId){
+    try {
+        // Get the database connection
+        const pool = await db.get_connection();
+  
+        // Query to retrieve the image
+        const query = `
+            SELECT Photo
+            FROM Patients
+            WHERE Id = @PatientId
+        `;
+  
+        // Execute the query and get the image data
+        const result = await pool.request()
+            .input('PatientId', db.sql.Int, patientId)
+            .query(query);
+
+        return result
+
+    }
+    catch(error){
+        console.error('Error adding new patient:', err);
+        throw err;
+
+    }
+}
 async function add_new_client(name, birthdate, gender, pregnancy, nursing, Phone, email, img) {
 
     try {
@@ -55,5 +81,6 @@ async function add_new_client(name, birthdate, gender, pregnancy, nursing, Phone
 
 module.exports = {
     getAllPatients,
-    add_new_client
+    add_new_client,
+    getImageUsingId
 };

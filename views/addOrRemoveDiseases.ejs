@@ -13,13 +13,60 @@
         <!-- Add the background image here -->
     <style>
         body {
-            background-image: url('../img/edit_diseases_background.jpg'); /* Replace with your image path */
-            background-size: cover; /* Cover the entire area */
-            background-position: center; /* Center the image */
-            background-repeat: no-repeat; /* Do not repeat the image */
-            background-attachment: fixed; /* Fixed background image when scrolling */
+            background-image: url('../img/edit_diseases_background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            position: relative; /* Add this to position the image container relative to the body */
         }
-    </style>
+
+                /* Define the boxed-btn3 class */
+        .boxed-btn3 {
+            display: inline-block;
+            padding: 10px 20px; /* Adjust padding as needed */
+            font-size: 16px; /* Adjust font size */
+            border: 2px solid #ccc; /* Example border */
+            border-radius: 5px; /* Rounded corners */
+            background-color: #f8f9fa; /* Background color */
+            color: #333; /* Text color */
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Add hover effects */
+        .boxed-btn3:hover {
+            background-color: #333;
+            color: #fff;
+        }
+
+        /* Define the large-width class */
+        .large-width {
+            width: 200px; /* Fixed width to ensure consistency */
+            text-align: center;
+        }
+        #patientImageContainer {
+            width: 165px;
+            height: 165px;
+            border: 3px solid #ccc;
+            padding: 2px;
+            background-color: white;
+            display: none; /* Start with the container hidden */
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: absolute; /* Position the container absolutely */
+            top: 200px; /* Adjust the top position */
+            right: 350px; /* Adjust the right position */
+            z-index: 10; /* Ensure it stays on top of other content */
+        }
+
+        #patientImage {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }    </style>
 </head>
 <body>
     <div class="container">
@@ -74,12 +121,17 @@
             </div>
         </div>
     </div>
+    <!-- Patient Image Display Section -->
+    <div id="patientImageContainer" style="display: none;">
+        <img id="patientImage" src="" alt="Patient Image">
+    </div>
 
     <!-- JS here -->
     <script src="../js/vendor/jquery-1.12.4.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/nice-select.min.js"></script>
     <script src="../js/main.js"></script>
+    <script src="/image-handler.js"></script>
 
     <!-- Inline JS to dynamically update diseases based on patient selection -->
     <script>
