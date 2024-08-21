@@ -1,5 +1,5 @@
 const express = require('express');
-const fileUpload = require('express-fileupload');
+// const fileUpload = require('express-fileupload');
 const fs = require('fs');
 const multer = require('multer');
 
@@ -11,7 +11,7 @@ const db = require('./models/DataBase')
 const path = require('path');
 
 app.use(express.static(__dirname));
-app.use(fileUpload());
+// app.use(fileUpload());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
