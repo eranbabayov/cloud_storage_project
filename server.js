@@ -1,6 +1,7 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
+const multer = require('multer');
 
 const app = express();
 const patientRoutes = require('./routes/patientRoutes');

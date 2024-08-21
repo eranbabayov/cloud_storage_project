@@ -40,40 +40,37 @@ async function getImageUsingId(patientId){
 
     }
 }
-async function add_new_client(name, birthdate, gender, pregnancy, nursing, Phone, email, img) {
-
+async function addNewPatient(name, birthdate, gender, pregnancy, nursing, Phone, email, img) {
     try {
-        const connection = await db.get_connection(); // Get the database connection from data_base.js
-        // Prepare the SQL query with parameterized values to prevent SQL injection
-        if (gender== 'male'){
-            nursing = false
-            breast_feeding = false
+        const connection = await db.get_connection();
+
+        if (gender.toLowerCase() === 'male') {
+            nursing = false;
+            pregnancy = false;
         }
+
         const maxIdResult = await connection.request().query('SELECT ISNULL(MAX(Id), 0) AS MaxId FROM Patients');
         const maxId = maxIdResult.recordset[0].MaxId;
 
         const query = `
-            INSERT INTO Patients (Id, Name, Gender, Pregnancy, Nursing ,Birthdate, Photo, Email, Phone, ChronicCondition)
+            INSERT INTO Patients (Id, Name, Gender, Pregnancy, Nursing, Birthdate, Photo, Email, Phone, ChronicCondition)
             VALUES (@Id, @Name, @gender, @Pregnancy, @nursing, @birthdate, @Photo, @Email, @Phone, NULL)
         `;
-        
-        // Use the connection to create a request and pass the parameters
+
         const request = connection.request();
-        request.input('Id', sql.Int, maxId+1);
+        request.input('Id', sql.Int, maxId + 1);
         request.input('Name', sql.NVarChar, name);
         request.input('gender', sql.NVarChar, gender);
         request.input('Pregnancy', sql.Bit, pregnancy);
         request.input('nursing', sql.Bit, nursing);
         request.input('birthdate', sql.Date, birthdate);
-        request.input('Photo', sql.NVarChar, img);
+        request.input('Photo', sql.VarBinary(sql.MAX), img)
         request.input('Email', sql.NVarChar, email);
         request.input('Phone', sql.NVarChar, Phone);
-        // Execute the query
-        const result = await request.query(query);
 
-        console.log('New patient added successfully:', result);
+        await request.query(query);
     } catch (err) {
-        console.error('Error adding new patient:', err);
+        console.error('Error adding new client:', err);
         throw err;
     }
 }
@@ -81,6 +78,6 @@ async function add_new_client(name, birthdate, gender, pregnancy, nursing, Phone
 
 module.exports = {
     getAllPatients,
-    add_new_client,
+    addNewPatient,
     getImageUsingId
 };
