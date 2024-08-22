@@ -110,7 +110,7 @@ async function addMedication(req, res) {
                     currentMedicationsArray.push(medication);
                     await medicationModel.updateMedicationsForPatient(patient_id, currentMedicationsArray.join(', '));
                     console.log('Medication added successfully');
-                    return res.json({ success: true, message: 'Medication added successfully.' });
+                    return res.json({ success: true, message: '' });
                 } else {
                     throw new Error(`HTTP error! status: ${apiResponse.status}`);
                 }
@@ -153,7 +153,7 @@ async function addMedication(req, res) {
                 // No issues, add the medication
                 currentMedicationsArray.push(medication);
                 await medicationModel.updateMedicationsForPatient(patient_id, currentMedicationsArray.join(', '));
-                return res.json({ success: true, message: 'Medication added successfully.' });
+                return res.json({ success: true, message: '' });
             }
         } catch (apiError) {
             console.error('API error:', apiError);

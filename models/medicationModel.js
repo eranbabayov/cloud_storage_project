@@ -16,6 +16,7 @@ async function getMedication() {
 }
 
 async function getAllPatientMedications() {
+    // מחזיר את כל המטופלים והתרופות שלהם
     try {
         const connection = await db.get_connection();
         const result = await connection.request().query(`
@@ -31,6 +32,7 @@ async function getAllPatientMedications() {
 }
 
 async function getdiseaseToMedicationsDict(patients) {
+    // מחזיר את התרופות האפשריות בהתאם למחלה
     try {
         const connection = await db.get_connection();
 

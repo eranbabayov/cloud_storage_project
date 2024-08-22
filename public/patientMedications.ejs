@@ -195,7 +195,6 @@
             const patientId = document.getElementById('patient-select').value;
             const removeMedicationSelect = document.getElementById('remove-medication-select');
             const selectedMedication = removeMedicationSelect.options[removeMedicationSelect.selectedIndex].text;
-            alert(selectedMedication)
 
             if (!patientId || !selectedMedication) {
                 alert('Please select both a patient and a medication to remove.');
@@ -243,7 +242,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Medication added successfully!');
+                    alert('Medication added successfully! ' + data.message);
                     // Optionally, refresh the page or update the UI
                 } else {
                     alert(data.message || 'Failed to add medication.');

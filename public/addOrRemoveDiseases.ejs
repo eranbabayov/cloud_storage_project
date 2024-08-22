@@ -138,6 +138,7 @@
         const currentDiseases = <%- JSON.stringify(currentDiseases) %>;
         
         function updateDiseases() {
+            //  מראה את המחלות שיש למטופל בהתאם למידע בדאטה בייס ומאפשר להוסיף מחלה (מתריע במידה וכבר קיימת המחלה )
             const patientId = document.getElementById('patient-select').value;
             if (!patientId) {
             console.error('No patient selected!');
@@ -210,6 +211,7 @@
     </script>
     <script>
     function removeDisease() {
+        //  מסיר את המחלה של המטופל
         const patientId = document.getElementById('patient-select').value;
         const diseaseSelectElement = document.getElementById('remove-disease-select');
         const selectedDiseaseText = diseaseSelectElement.options[diseaseSelectElement.selectedIndex].text;

@@ -2,6 +2,7 @@ const patientModel = require('../models/patientModel');
 const { editDiseases } = require('./diseaseController');
 
 async function addPatient(req, res) {
+    // Get all the desired information from the web server and call the patientModel to do the dirty work
     try {
         // Extract parameters from the request body
         const { name, birthdate, gender, pregnancy, nursing, phone, email } = req.body;

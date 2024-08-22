@@ -41,6 +41,7 @@ async function getImageUsingId(patientId){
     }
 }
 async function addNewPatient(name, birthdate, gender, pregnancy, nursing, Phone, email, img) {
+    // Add patient to the database
     try {
         const connection = await db.get_connection();
 
