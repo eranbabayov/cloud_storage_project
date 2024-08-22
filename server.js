@@ -10,15 +10,11 @@ const medicationsRoutes = require('./routes/medicationsRoutes');
 const db = require('./models/DataBase')
 const path = require('path');
 
-app.use(express.static(__dirname));
-// app.use(fileUpload());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-//app.use(express.static('public'));
-
 app.set('view engine', 'ejs');
 
+app.use(express.static(__dirname));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use('/patient', patientRoutes);
 app.use("/patient_chronic_disease", ChronicDiseaseRoutes);
 app.use("/patient_medications", medicationsRoutes);

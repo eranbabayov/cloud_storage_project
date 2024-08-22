@@ -14,7 +14,7 @@ async function addPatient(req, res) {
         await patientModel.addNewPatient(name, birthdate, gender, pregnancyBool, nursingBool, phone, email, img);
 
         // Redirect or respond with success
-        res.redirect('/');  // Redirect to the patient list page
+        res.redirect('/');  // Redirect to home page
     } catch (err) {
         console.log(err);
         res.status(500).send('Error adding new patient');
