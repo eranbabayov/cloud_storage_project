@@ -105,7 +105,7 @@ async function removeDiseaseFromPatient(patient_id, disease) {
             throw new Error('Patient not found.');
         }
         let currentDiseases = result.recordset[0].ChronicCondition;
-        let diseasesArray = currentDiseases.split(',');
+        let diseasesArray = currentDiseases.split(',').map(element => element.trim());
         if (!diseasesArray.includes(disease)) {
             return { success: false, message: 'Disease not found for this patient.', diseasesArray };
         }

@@ -3,6 +3,7 @@ const db = require('./DataBase'); // Updated to use data_base.js
 const sql = require('mssql');
 
 async function getAllPatients() {
+    // מחזיר את כל המטופלים והמידע עליהם מהדאטה בייס
     try {
         console.log("Try to get patients from db")
         const connection = await db.get_connection(); // Using the connect function from data_base.js
