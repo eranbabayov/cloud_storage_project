@@ -63,6 +63,8 @@ async function removeMedication(req, res) {
 
 async function addMedication(req, res) {
     try {
+        console.log('Request received:', req.body);
+
         const { patient_id, medication } = req.body;
 
         // Log the medication being added for debugging purposes

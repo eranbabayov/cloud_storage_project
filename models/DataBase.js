@@ -1,4 +1,4 @@
-// models/db.js
+// models/DataBase.js
 
 const sql = require('mssql');
 

@@ -1,27 +1,6 @@
 const patientModel = require('../models/patientModel');
 const { editDiseases } = require('./diseaseController');
 
-async function listPatients(req, res) {
-    try {
-        const patients = await patientModel.getAllPatients();
-        res.render('index', { patients });
-    } catch (err) {
-        console.log(err)
-        res.status(500).send('Error retrieving patients');
-    }
-}
-
-
-async function listPatients(req, res) {
-    try {
-        const patients = await patientModel.getAllPatients();
-        res.render('index', { patients });
-    } catch (err) {
-        console.log(err);
-        res.status(500).send('Error retrieving patients');
-    }
-}
-
 async function addPatient(req, res) {
     try {
         // Extract parameters from the request body
@@ -65,7 +44,6 @@ async function getImage(req, res) {
 }
 
 module.exports = {
-    listPatients,
     addPatient,
     editDiseases,
     getImage

@@ -99,13 +99,13 @@
                         <label for="remove-medication-select">Choose Medication to Remove</label>
                         <select class="form-select wide" id="remove-medication-select" name="medication_id_remove">
                             <% currentMedications.forEach(function(medication) { %>
-                                <option value="<%= medication.Id %>"><%= medication.MedicationName %></option>
+                                <option value="<%= medication.patient_id %>"><%= medication.MedicationName %></option>
                             <% }) %>
                         </select>
                     </div>
 
                     <div class="text-center mt-5">
-                        <button type="submit" class="boxed-btn3 large-width" onclick="addMedication()"> Add Patient Medications</button>
+                        <button type="submit" class="boxed-btn3 large-width" id="add-medication-button" onclick="addMedication()"> Add Patient Medications</button>
                         <button type="button" class="boxed-btn3 large-width" onclick="removeMedication()">Remove Patient Medications</button>
 
                         <a href="/" class="boxed-btn3 large-width">Back to Homepage</a>
@@ -154,29 +154,17 @@
                     option.textContent = medication;
                     medicationSelect.appendChild(option);
                 });
-
-            const patientImageUrl = patientSelect.options[patientSelect.selectedIndex].getAttribute('data-image');
-            const patientImageContainer = document.getElementById('patientImageContainer');
-            const patientImage = document.getElementById('patientImage');
-            if (patientImageUrl) {
-                patientImage.src = patientImageUrl;
-                patientImageContainer.style.display = 'flex'; // Show the container
-            } else {
-                patientImageContainer.style.display = 'none'; // Hide the container if no image
             }
 
             const removeMedicationSelect = document.getElementById('remove-medication-select');
-
             // Clear the current options
             removeMedicationSelect.innerHTML = '';
-
             // Filter diseases for the selected patient
             const filteredMedication = currentMedications.filter(medication => medication.patient_id === parseInt(patientId));
             // Populate the remove-medication-select dropdown with filtered medication
             filteredMedication.forEach(medication => {
                 // Split the medication string by comma
                 const medicationsArray = medication.Medication.split(',');
-
                 // Loop through each medication and add it as a separate option
                 medicationsArray.forEach(singleMedication => {
                     const option = document.createElement('option');
@@ -185,9 +173,21 @@
                     removeMedicationSelect.appendChild(option);
                 });
             });
-        }
+
+            const patientImageUrl = patientSelect.options[patientSelect.selectedIndex].getAttribute('data-image');
+            const patientImageContainer = document.getElementById('patientImageContainer');
+            const patientImage = document.getElementById('patientImage');
+            if (patientImageUrl) {
+                patientImage.src = patientImageUrl;
+                patientImageContainer.style.display = 'flex'; // Show the container
+
+            } else {
+                patientImageContainer.style.display = 'none'; // Hide the container if no image
+            }
+
 
         }
+
 
         // function validateSettingNewMedication(new_medication, medicationsCode, )
         
@@ -251,8 +251,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert(error)
-                alert('An error occurred while adding the medication.');
+                alert('An error occurred while adding the medication.'+ error);
             });
         }
 

@@ -137,16 +137,7 @@ async function updateMedicationsForPatient(patient_id, updatedMedications) {
 
 async function checkMedicationExists(patient_id, medication) {
     try {
-        const connection = await db.get_connection();
-        const result = await connection.request()
-            .input('patientId', sql.Int, patient_id)
-            .query('SELECT Medication FROM Patients WHERE Id = @patientId');
-
-        if (result.recordset.length === 0) {
-            throw new Error('Patient not found.');
-        }
-
-        let currentMedications = result.recordset[0].Medication;
+        let currentMedications = await getMedicationsForPatient(patient_id)
 
         if (currentMedications) {
             let medicationsArray = currentMedications.split(',').map(med => med.trim());

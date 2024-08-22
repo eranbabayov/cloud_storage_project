@@ -12,7 +12,6 @@ const upload = multer({ storage: storage });
 router.post('/add', upload.single('photo'), patientController.addPatient);
 // router.post('/add', patientController.addPatient);
 
-router.post('/', patientController.listPatients);
 router.get('/get_patient_image/:id', patientController.getImage);
 
 module.exports = router;
