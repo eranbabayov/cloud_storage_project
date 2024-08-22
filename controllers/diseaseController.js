@@ -17,7 +17,7 @@ async function editDiseases(req, res){
         const patients = await patientModel.getAllPatients();
         const currentDiseases = await diseaseModel.getAllPatientDiseases()
         console.log(diseases)
-        res.render('addOrRemoveDiseases', { patients: patients, diseases: diseases, currentDiseases: currentDiseases});
+        res.render('../public/addOrRemoveDiseases', { patients: patients, diseases: diseases, currentDiseases: currentDiseases});
       } catch (err) {
         console.error('Error fetching patients:', err);
         res.status(500).send('Internal Server Error');
