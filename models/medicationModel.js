@@ -109,17 +109,27 @@ async function getdiseaseToMedicationsDict(patients) {
 
 async function getMedicationsForPatient(patient_id) {
     try {
+        console.log('Fetching medications for patient ID:', patient_id);
         const connection = await db.get_connection();
+        console.log('Database connection established');
+        
         const result = await connection.request()
             .input('patientId', sql.Int, patient_id) // Use .input() to add parameter
             .query('SELECT Medication FROM Patients WHERE Id = @patientId'); // Use named parameter
-        return result.recordset[0].Medication;
+        
+        console.log('Query executed, result:', result.recordset);
+        
+        if (result.recordset.length > 0) {
+            return result.recordset[0].Medication;
+        } else {
+            console.log('No medication found for patient ID:', patient_id);
+            return null; // Return null if no medication is found
+        }
     } catch (error) {
         console.error('Error fetching medications:', error);
         throw error;
     }
 }
-
 async function updateMedicationsForPatient(patient_id, updatedMedications) {
     try {
         const connection = await db.get_connection();

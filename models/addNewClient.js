@@ -38,35 +38,51 @@ async function checkImage(file) {
 
         // Check if the response is OK
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            const errorData = await response.json();
+            throw new Error(`API error: ${errorData.status_text || 'Unknown error'}`);
         }
 
         const data = await response.json();
 
         // Tags that indicate a face or face-related content
-        const faceTags = new Set(['face', 'human']);
+        const requiredTags = new Set(['face', 'person']);
 
-        // Check for face-related tags
-        const tags = data.result.tags;
-        const isFaceImage = tags.some(tag => faceTags.has(tag.tag.en.toLowerCase()));
+        // Extract tags from the response
+        const tagsArray = data.result.tags || [];
+        let tags = [];
 
-        return isFaceImage;
+        // Handle different formats of tags
+        if (Array.isArray(tagsArray[0])) {
+            // If tagsArray is an array of arrays, flatten it
+            tags = tagsArray.flat();
+        } else {
+            // Otherwise, assume it's a single array
+            tags = tagsArray;
+        }
+
+        // Extract tag names
+        const tagNames = new Set(tags.map(tag => tag.tag.en.toLowerCase()));
+
+        // Check if all required tags are present
+        const hasAllRequiredTags = [...requiredTags].every(tag => tagNames.has(tag));
+
+        return { isFaceImage: hasAllRequiredTags };
 
     } catch (error) {
         console.error('Error checking image:', error);
         throw error;
     }
 }
-
 async function checkNewImage(event) {
     // Get the file from the input element
     const file = event.target.files[0];
+
     // Check if a file is selected
     if (file) {
         try {
             // Wait for the checkImage function to complete
             const result = await checkImage(file);
-            if (!result) {
+            if (!result.isFaceImage) {
                 alert("You inserted a wrong face image! Please change the image.");
                 
                 // Clear the image input

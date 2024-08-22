@@ -54,6 +54,7 @@ async function removeMedication(req, res) {
             return res.json({ success: true });
         } else {
             return res.json({ success: false, message: 'Failed to remove medication.' });
+    
         }
     } catch (error) {
         console.error('Error removing medication:', error);
