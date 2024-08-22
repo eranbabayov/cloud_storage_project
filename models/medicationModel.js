@@ -82,12 +82,25 @@ async function getdiseaseToMedicationsDict(patients) {
         let patientsOptionalMedicationsDict = {}
         patients.forEach(patient => {
             if (patient.ChronicCondition == null)	{
-                patientsOptionalMedicationsDict[patient.Name] = "Choosen patients feeling good"
+                patientsOptionalMedicationsDict[patient.Id] = "Choosen patients feeling good"
         }
-    })
-        return diseaseToMedicationsDict;
+            else{
+                if (!patientsOptionalMedicationsDict[patient.Id]) {
+                    patientsOptionalMedicationsDict[patient.Id] = [];
+                }
+                patientChronicConditions = patient.ChronicCondition.split(',');
+                patientChronicConditions.forEach(patientChronicCondition=>{
+                    patientChronicCondition = patientChronicCondition.trim();
+                    diseaseToMedicationsDict[patientChronicCondition].forEach(patientChronicCondition=>{
+                        patientsOptionalMedicationsDict[patient.Id] = patientsOptionalMedicationsDict[patient.Id].concat(patientChronicCondition)}
+                )})
+    //                patientsOptionalMedicationsDict[patient.Name] = patientsOptionalMedicationsDict[patient.Name].concat(diseaseToMedicationsDict[patientChronicCondition].split(','))
+                }})
 
-    } catch (err) {
+        return patientsOptionalMedicationsDict;
+        }
+
+     catch (err) {
         console.error('Error querying the database:', err);
         throw err;
     }

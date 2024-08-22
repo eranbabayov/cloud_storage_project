@@ -129,14 +129,32 @@
     <!-- Inline JS for dynamic functionalities -->
     <script>
         const currentMedications = <%- JSON.stringify(currentMedications) %>;
+        const patientsOptionalMedicationsDict = <%- JSON.stringify(patientsOptionalMedicationsDict) %>;
 
         function updateMedication() {
             const patientId = document.getElementById('patient-select').value;
+            const medicationSelect = document.getElementById('medication-select'); // Define medicationSelect here
             if (!patientId) {
             console.error('No patient selected!');
             alert('No patient selected')
             return;
             }
+            // Clear previous options in the medication select dropdown
+            medicationSelect.innerHTML = '';
+
+            if (patientsOptionalMedicationsDict[patientId] === "Choosen patients feeling good") {
+                const option = document.createElement('option');
+                option.textContent = "No medications needed";
+                medicationSelect.appendChild(option);
+            } else {
+                const medications = patientsOptionalMedicationsDict[patientId];
+                medications.forEach(medication => {
+                    const option = document.createElement('option');
+                    option.value = medication;  // Medication name
+                    option.textContent = medication;
+                    medicationSelect.appendChild(option);
+                });
+
             const patientImageUrl = patientSelect.options[patientSelect.selectedIndex].getAttribute('data-image');
             const patientImageContainer = document.getElementById('patientImageContainer');
             const patientImage = document.getElementById('patientImage');
@@ -167,7 +185,7 @@
                     removeMedicationSelect.appendChild(option);
                 });
             });
-
+        }
 
         }
 
